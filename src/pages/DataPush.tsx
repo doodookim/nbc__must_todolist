@@ -1,4 +1,15 @@
-import { CollectionReference, addDoc, collection, deleteDoc, doc, getDocs } from 'firebase/firestore';
+import {
+  CollectionReference,
+  addDoc,
+  collection,
+  deleteDoc,
+  doc,
+  getDocs,
+  orderBy,
+  query,
+  serverTimestamp,
+  updateDoc
+} from 'firebase/firestore';
 import { useEffect, useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { db } from '../firebase';
@@ -6,22 +17,37 @@ import { db } from '../firebase';
 // 새로운 컨텐츠 형식 정의하는 인터페이스
 interface NewContent {
   contents: string;
+  createdAt: any;
+  isCompleted: boolean;
 }
 
 function DataPush() {
   const [contents, setContents] = useState(''); // 내용 입력 상태
+  const [isCompleted, setIsCompleted] = useState(false); // 완료 상태
   const [data, setData] = useState<any[]>([]); // firebase 데이터 상태
+  const [editItemId, setEditItemId] = useState<string | null>(null); // 현재 편집 중인 항목 상태
+  const [editContents, setEditContents] = useState(''); // 내용 수정 상태
   const queryClient = useQueryClient(); // 쿼리 클라이언트 인스턴스
 
-  // firebase에 데이터 추가하는 뮤테이션
+  // 진행률 나타내는 함수
+  const completionBar = () => {
+    const completedCount = data.filter((item) => item.isCompleted).length;
+    const totalCount = data.length;
+    if (totalCount === 0) {
+      return null;
+    }
+    return Math.round((completedCount / totalCount) * 100);
+  };
+
+  // 등록 하기
   const addNewContent = async (newContent: NewContent) => {
     try {
-      // fire store에서 'contents' 컬렉션 참조
+      // firestore에서 'contents' 컬렉션 참조
       const contentsRef: CollectionReference = collection(db, 'contents');
 
-      // fire store에 새로운 데이터 추가
+      // firestore에 새로운 데이터 추가
       const docRef = await addDoc(contentsRef, newContent);
-      console.log(docRef);
+      // console.log(docRef);
       return docRef;
     } catch (error: any) {
       // 에러를 any 또는 적절한 타입으로 처리
@@ -37,15 +63,20 @@ function DataPush() {
       console.error('데이터 전송 에러:', error.message);
     }
   });
-  console.log(mutation.data);
+  // console.log(mutation.data);
   const onChangeContentsHandler = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     setContents(event.target.value);
   };
 
-  const onSubmitHandler = (event: React.FormEvent<HTMLFormElement>) => {
+  const onSubmitHandler = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    mutation.mutate({ contents });
-    setContents('');
+    try {
+      const createdAt = serverTimestamp();
+      await mutation.mutateAsync({ contents, createdAt, isCompleted });
+      setContents('');
+    } catch (error) {
+      console.error('데이터 전송 에러:', error);
+    }
   };
 
   const {
@@ -53,28 +84,40 @@ function DataPush() {
     isError,
     data: fetchedData
   } = useQuery('contents', async () => {
-    const contetnsRef = collection(db, 'contents');
-    const querySnapshot = await getDocs(contetnsRef);
+    const contentsRef = collection(db, 'contents');
+    const queryContents = query(contentsRef, orderBy('createdAt', 'asc'));
+    const querySnapshot = await getDocs(queryContents);
     const newData: any[] = [];
-    querySnapshot.forEach((doc) => {
+    querySnapshot.forEach((doc: any) => {
       newData.push({ id: doc.id, ...doc.data() });
-      console.log(data);
     });
     return newData;
   });
 
   // 수정 하기
-  // const updateCompleteHandler = async (id: string) => {
-  //   try {
-  //     const docRef = doc(db, 'contents', id);
-  //     const dataToupdate = {
-  //       contents: contents
-  //     };
-  //     await updateDoc(docRef, dataToupdate);
-  //   } catch (error) {
-  //     console.error('문서 업데이트 중 오류가 발생했습니다.', error);
-  //   }
-  // };
+  const editItemHandler = async (id: string) => {
+    setEditItemId(id); // 현재 편집 중이 항목 ID 설정
+    const itemToEdit = data.find((item) => item.id === id);
+    if (itemToEdit) {
+      setEditContents(itemToEdit.contents); // 수정 하고 싶은 항목을 수정 상태로 변경
+    }
+  };
+
+  const updateItemHandler = async (event: React.FormEvent<HTMLFormElement>, id: string) => {
+    event.preventDefault();
+    try {
+      const docRef = doc(db, 'contents', id);
+      const dataToUpdate = {
+        contents: editContents
+      };
+      await updateDoc(docRef, dataToUpdate);
+      setEditItemId(null);
+      setEditContents('');
+      queryClient.invalidateQueries('contents');
+    } catch (error) {
+      console.error('문서 업데이트 중 오류가 발생했습니다.', error);
+    }
+  };
 
   // 삭제하기
   const deleteItem = async (id: string) => {
@@ -84,6 +127,24 @@ function DataPush() {
       queryClient.invalidateQueries('contents');
     } catch (error) {
       console.error('문서 삭제 중 오류가 발생했습니다', error);
+    }
+  };
+  // 할 일 완료하기
+  const toggleCompletionHandler = async (id: string) => {
+    try {
+      const docRef = doc(db, 'contents', id);
+      const itemToToggle = data.find((item) => item.id === id);
+
+      if (itemToToggle) {
+        const updatedIsCompleted = !itemToToggle.isCompleted;
+        const dataToUpdate = {
+          isCompleted: updatedIsCompleted
+        };
+        await updateDoc(docRef, dataToUpdate);
+        queryClient.invalidateQueries('contents');
+      }
+    } catch (error) {
+      console.error('할 일 완료 처리 중 오류가 발생했습니다.', error);
     }
   };
 
@@ -98,6 +159,11 @@ function DataPush() {
   if (isError) {
     return <div>Error fetching data</div>;
   }
+
+  const renderDate = (timestamp: any) => {
+    const date = new Date(timestamp?.toDate()); // Firestore Timestamp를 JavaScript Date로 변환합니다.
+    return date.toLocaleString(); // 원하는 형식으로 시간을 표시할 수 있습니다.
+  };
 
   return (
     <>
@@ -114,25 +180,67 @@ function DataPush() {
           <br />
           <div>
             {data.map((item) => (
-              <>
-                <div key={item.id}>
-                  {item.contents}
-                  <button>수정</button>
-                  <button
-                    onClick={() => {
-                      deleteItem(item.id);
+              <div key={item.id}>
+                {editItemId === item.id ? (
+                  <form
+                    onSubmit={(event) => {
+                      updateItemHandler(event, item.id);
                     }}
                   >
-                    삭제
-                  </button>
+                    <textarea value={editContents} onChange={(event) => setEditContents(event.target.value)} />
+                    <button type="submit">수정완료</button>
+                  </form>
+                ) : (
+                  <>
+                    {item.contents}
+                    <button
+                      onClick={() => {
+                        editItemHandler(item.id);
+                      }}
+                    >
+                      수정
+                    </button>
+                    <button
+                      onClick={() => {
+                        toggleCompletionHandler(item.id);
+                      }}
+                    >
+                      {item.isCompleted ? '완료 취소' : '완료'}
+                    </button>
+                    <button
+                      onClick={() => {
+                        deleteItem(item.id);
+                      }}
+                    >
+                      삭제
+                    </button>
+
+                    <p>작성 시간: {renderDate(item.createdAt)}</p>
+                  </>
+                )}
+                <div>
+                  <div
+                    style={{
+                      width: '200px',
+                      border: '1px solid #ccc',
+                      borderRadius: '5px'
+                    }}
+                  >
+                    <div
+                      style={{
+                        width: `${completionBar()}%`,
+                        height: '20px',
+                        backgroundColor: '#4CAF50',
+                        borderRadius: '5px'
+                      }}
+                    />
+                  </div>
+                  <span>진행률 : {completionBar()}%</span>
                 </div>
-              </>
+              </div>
             ))}
           </div>
         </div>
-      </div>
-      <div>
-        <button>공유 하기</button>
       </div>
     </>
   );
