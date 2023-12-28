@@ -1,8 +1,14 @@
+import { QueryClient, QueryClientProvider } from 'react-query';
+import DataPush from './DataPush';
+
+const queryClient = new QueryClient();
 
 const Main = () => {
   return (
-    <div>Main</div>
-  )
-}
-
-export default Main
+    <QueryClientProvider client={queryClient}>
+      main
+      <DataPush />
+    </QueryClientProvider>
+  );
+};
+export default Main;
