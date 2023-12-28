@@ -1,4 +1,4 @@
-import { CollectionReference, addDoc, collection, deleteDoc, doc, getDocs } from 'firebase/firestore';
+import { CollectionReference, addDoc, collection, deleteDoc, doc, getDocs, updateDoc } from 'firebase/firestore';
 import { useEffect, useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { db } from '../firebase';
@@ -11,9 +11,11 @@ interface NewContent {
 function DataPush() {
   const [contents, setContents] = useState(''); // 내용 입력 상태
   const [data, setData] = useState<any[]>([]); // firebase 데이터 상태
+  const [editItemId, setEditItemId] = useState<string | null>(null); // 현재 편집 중인 항목 상태
+  const [editContents, setEditContents] = useState(''); // 내용 수정 상태
   const queryClient = useQueryClient(); // 쿼리 클라이언트 인스턴스
 
-  // firebase에 데이터 추가하는 뮤테이션
+  // 등록 하기
   const addNewContent = async (newContent: NewContent) => {
     try {
       // fire store에서 'contents' 컬렉션 참조
@@ -63,17 +65,29 @@ function DataPush() {
   });
 
   // 수정 하기
-  // const updateCompleteHandler = async (id: string) => {
-  //   try {
-  //     const docRef = doc(db, 'contents', id);
-  //     const dataToupdate = {
-  //       contents: contents
-  //     };
-  //     await updateDoc(docRef, dataToupdate);
-  //   } catch (error) {
-  //     console.error('문서 업데이트 중 오류가 발생했습니다.', error);
-  //   }
-  // };
+  const editItemHandler = async (id: string) => {
+    setEditItemId(id); // 현재 편집 중이 항목 ID 설정
+    const itemToEdit = data.find((item) => item.id === id);
+    if (itemToEdit) {
+      setEditContents(itemToEdit.contents); // 수정 하고 싶은 항목을 수정 상태로 변경
+    }
+  };
+
+  const updateItemHandler = async (event: React.FormEvent<HTMLFormElement>, id: string) => {
+    event.preventDefault();
+    try {
+      const docRef = doc(db, 'contents', id);
+      const dataToUpdate = {
+        contents: editContents
+      };
+      await updateDoc(docRef, dataToUpdate);
+      setEditItemId(null);
+      setEditContents('');
+      queryClient.invalidateQueries('contents');
+    } catch (error) {
+      console.error('문서 업데이트 중 오류가 발생했습니다.', error);
+    }
+  };
 
   // 삭제하기
   const deleteItem = async (id: string) => {
@@ -113,19 +127,36 @@ function DataPush() {
           <br />
           <div>
             {data.map((item) => (
-              <>
-                <div key={item.id}>
-                  {item.contents}
-                  <button>수정</button>
-                  <button
-                    onClick={() => {
-                      deleteItem(item.id);
+              <div key={item.id}>
+                {editItemId === item.id ? (
+                  <form
+                    onSubmit={(event) => {
+                      updateItemHandler(event, item.id);
                     }}
                   >
-                    삭제
-                  </button>
-                </div>
-              </>
+                    <textarea value={editContents} onChange={(event) => setEditContents(event.target.value)} />
+                    <button type="submit">수정완료</button>
+                  </form>
+                ) : (
+                  <>
+                    {item.contents}
+                    <button
+                      onClick={() => {
+                        editItemHandler(item.id);
+                      }}
+                    >
+                      수정
+                    </button>
+                    <button
+                      onClick={() => {
+                        deleteItem(item.id);
+                      }}
+                    >
+                      삭제
+                    </button>
+                  </>
+                )}
+              </div>
             ))}
           </div>
         </div>
