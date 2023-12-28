@@ -1,6 +1,7 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import Login from '../App';
 import Main from '../pages/Main';
+// 이거 지워 주세요
 
 const Router = () => {
   return (
