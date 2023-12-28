@@ -1,23 +1,25 @@
-import { CollectionReference, addDoc, collection, getDocs } from 'firebase/firestore';
+import { CollectionReference, addDoc, collection, deleteDoc, doc, getDocs } from 'firebase/firestore';
 import { useEffect, useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { db } from '../firebase';
 
+// 새로운 컨텐츠 형식 정의하는 인터페이스
 interface NewContent {
   contents: string;
 }
 
 function DataPush() {
-  const [contents, setContents] = useState('');
-  const [data, setData] = useState<any[]>([]);
-  const queryClient = useQueryClient();
+  const [contents, setContents] = useState(''); // 내용 입력 상태
+  const [data, setData] = useState<any[]>([]); // firebase 데이터 상태
+  const queryClient = useQueryClient(); // 쿼리 클라이언트 인스턴스
 
+  // firebase에 데이터 추가하는 뮤테이션
   const addNewContent = async (newContent: NewContent) => {
     try {
-      // Firestore에서 'contents' 컬렉션 참조
+      // fire store에서 'contents' 컬렉션 참조
       const contentsRef: CollectionReference = collection(db, 'contents');
 
-      // Firestore에 새로운 데이터 추가
+      // fire store에 새로운 데이터 추가
       const docRef = await addDoc(contentsRef, newContent);
       console.log(docRef);
       return docRef;
@@ -26,7 +28,7 @@ function DataPush() {
       throw new Error('Firebase에 데이터 추가 중 에러 발생: ' + error.message);
     }
   };
-
+  // mutation 변수명은 임의로 지정 가능함.
   const mutation = useMutation(addNewContent, {
     onSuccess: () => {
       queryClient.invalidateQueries('contents');
@@ -61,6 +63,30 @@ function DataPush() {
     return newData;
   });
 
+  // 수정 하기
+  // const updateCompleteHandler = async (id: string) => {
+  //   try {
+  //     const docRef = doc(db, 'contents', id);
+  //     const dataToupdate = {
+  //       contents: contents
+  //     };
+  //     await updateDoc(docRef, dataToupdate);
+  //   } catch (error) {
+  //     console.error('문서 업데이트 중 오류가 발생했습니다.', error);
+  //   }
+  // };
+
+  // 삭제하기
+  const deleteItem = async (id: string) => {
+    try {
+      const docRef = doc(db, 'contents', id);
+      await deleteDoc(docRef);
+      queryClient.invalidateQueries('contents');
+    } catch (error) {
+      console.error('문서 삭제 중 오류가 발생했습니다', error);
+    }
+  };
+
   useEffect(() => {
     if (fetchedData) {
       setData(fetchedData);
@@ -80,7 +106,7 @@ function DataPush() {
           <textarea onChange={onChangeContentsHandler} value={contents} placeholder="할 일을 작성해 주세요." />
           여기에 내용을 넣고 버튼을 클릭시 firebase 데이터 전송
           <div>
-            <button type="submit">데이터 전송하기</button>
+            <button type="submit">작성 완료</button>
           </div>
         </form>
         <div>
@@ -91,7 +117,14 @@ function DataPush() {
               <>
                 <div key={item.id}>
                   {item.contents}
-                  <button>수정하기</button>
+                  <button>수정</button>
+                  <button
+                    onClick={() => {
+                      deleteItem(item.id);
+                    }}
+                  >
+                    삭제
+                  </button>
                 </div>
               </>
             ))}
