@@ -19,6 +19,7 @@ function DataPush() {
 
       // Firestore에 새로운 데이터 추가
       const docRef = await addDoc(contentsRef, newContent);
+      console.log(docRef);
       return docRef;
     } catch (error: any) {
       // 에러를 any 또는 적절한 타입으로 처리
@@ -34,7 +35,7 @@ function DataPush() {
       console.error('데이터 전송 에러:', error.message);
     }
   });
-
+  console.log(mutation.data);
   const onChangeContentsHandler = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     setContents(event.target.value);
   };
@@ -99,12 +100,6 @@ function DataPush() {
       </div>
       <div>
         <button>공유 하기</button>
-        <br />
-        내가 해야 되는 것 <br />
-        1. Firebase 데이터 관리 <br />
-        2. 데이터 넣기, 가져오기, 수정하기, 삭제하기 이거 하다가 건우님, 가을님한테 넘겨주고 <br />
-        3. 공유하기 버튼 누르면 카카오톡 공유하기 설정 같이 하기 <br />
-        4. 전부 끝나면 웹 푸시 해보기
       </div>
     </>
   );
