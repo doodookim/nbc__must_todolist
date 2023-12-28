@@ -1,4 +1,15 @@
-import { CollectionReference, addDoc, collection, deleteDoc, doc, getDocs, updateDoc } from 'firebase/firestore';
+import {
+  CollectionReference,
+  addDoc,
+  collection,
+  deleteDoc,
+  doc,
+  getDocs,
+  orderBy,
+  query,
+  serverTimestamp,
+  updateDoc
+} from 'firebase/firestore';
 import { useEffect, useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { db } from '../firebase';
@@ -6,6 +17,7 @@ import { db } from '../firebase';
 // 새로운 컨텐츠 형식 정의하는 인터페이스
 interface NewContent {
   contents: string;
+  createdAt: any;
 }
 
 function DataPush() {
@@ -18,10 +30,10 @@ function DataPush() {
   // 등록 하기
   const addNewContent = async (newContent: NewContent) => {
     try {
-      // fire store에서 'contents' 컬렉션 참조
+      // firestore에서 'contents' 컬렉션 참조
       const contentsRef: CollectionReference = collection(db, 'contents');
 
-      // fire store에 새로운 데이터 추가
+      // firestore에 새로운 데이터 추가
       const docRef = await addDoc(contentsRef, newContent);
       return docRef;
     } catch (error: any) {
@@ -43,10 +55,15 @@ function DataPush() {
     setContents(event.target.value);
   };
 
-  const onSubmitHandler = (event: React.FormEvent<HTMLFormElement>) => {
+  const onSubmitHandler = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    mutation.mutate({ contents });
-    setContents('');
+    try {
+      const createdAt = serverTimestamp();
+      await mutation.mutateAsync({ contents, createdAt });
+      setContents('');
+    } catch (error) {
+      console.error('데이터 전송 에러:', error);
+    }
   };
 
   const {
@@ -54,12 +71,12 @@ function DataPush() {
     isError,
     data: fetchedData
   } = useQuery('contents', async () => {
-    const contetnsRef = collection(db, 'contents');
-    const querySnapshot = await getDocs(contetnsRef);
+    const contentsRef = collection(db, 'contents');
+    const queryContents = query(contentsRef, orderBy('createdAt', 'asc'));
+    const querySnapshot = await getDocs(queryContents);
     const newData: any[] = [];
-    querySnapshot.forEach((doc) => {
+    querySnapshot.forEach((doc: any) => {
       newData.push({ id: doc.id, ...doc.data() });
-      console.log(data);
     });
     return newData;
   });
@@ -112,6 +129,11 @@ function DataPush() {
     return <div>Error fetching data</div>;
   }
 
+  const renderDate = (timestamp: any) => {
+    const date = new Date(timestamp?.toDate()); // Firestore Timestamp를 JavaScript Date로 변환합니다.
+    return date.toLocaleString(); // 원하는 형식으로 시간을 표시할 수 있습니다.
+  };
+
   return (
     <>
       <div>
@@ -154,20 +176,13 @@ function DataPush() {
                     >
                       삭제
                     </button>
+                    <p>작성 시간: {renderDate(item.createdAt)}</p>
                   </>
                 )}
               </div>
             ))}
           </div>
         </div>
-      </div>
-      <div>
-        <button>공유 하기</button>
-        <br />
-        내가 해야 되는 것 <br />
-        1. Firebase 데이터 관리 <br />
-        2. 수정하기, 삭제하기
-        <br />
       </div>
     </>
   );
