@@ -1,7 +1,18 @@
-import MustTodoList from '../components/MustTodoList';
+import { QueryClient } from 'react-query';
+import Share from '../components/Share';
+import DataPush from './DataPush';
+
+const queryClient = new QueryClient();
+
 
 const Main = () => {
-  return <MustTodoList />;
+
+  return  (
+    <QueryClientProvider client={queryClient}>
+    <DataPush/>
+    <Share/>
+    </QueryClientProvider>
+  )
 };
 
 export default Main;
