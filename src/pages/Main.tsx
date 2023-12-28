@@ -1,8 +1,7 @@
+import MustTodoList from '../components/MustTodoList';
 
 const Main = () => {
-  return (
-    <div>Main</div>
-  )
-}
+  return <MustTodoList />;
+};
 
-export default Main
+export default Main;

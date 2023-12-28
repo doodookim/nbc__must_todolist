@@ -2,9 +2,10 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 // MustTodo 항목의 타입을 지정
 interface MustTodo {
-  id: string;
+  id: number;
   title: string;
   content: string;
+  isDone: boolean;
 }
 // MustTodo 상태 타입 지정
 interface MustTodoState {
