@@ -4,7 +4,7 @@ import './index.css';
 import reportWebVitals from './reportWebVitals';
 
 import { Provider } from 'react-redux';
-import app from './firebase';
+import { app } from './firebase';
 import { store } from './redux/store/store';
 
 console.log('app', app);

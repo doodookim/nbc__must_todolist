@@ -1,4 +1,5 @@
 // Import the functions you need from the SDKs you need
+import { getAuth } from '@firebase/auth';
 import { initializeApp } from 'firebase/app';
 import { FieldValue, getFirestore } from 'firebase/firestore';
 // TODO: Add SDKs for Firebase products that you want to use
@@ -15,8 +16,10 @@ const firebaseConfig: Record<string, string> = {
 };
 
 // Initialize Firebase
-const app = initializeApp(firebaseConfig);
+export const app = initializeApp(firebaseConfig);
 export const db = getFirestore(app);
 export const firebase = { FieldValue };
 // React에서 정상적으로 동작하는 지 확인하기 위해서 임시로 export 시켜줍니다. app이 정상적으로 출력되는 것을 확인하고 나면, 지워줍니다.
-export default app;
+
+// export default app;
+export const auth = getAuth(app);
