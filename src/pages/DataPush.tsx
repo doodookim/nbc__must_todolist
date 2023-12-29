@@ -31,14 +31,26 @@ function DataPush() {
 
   // 진행률 나타내는 함수
   const completionBar = () => {
-    const completedCount = data.filter((item) => item.isCompleted).length;
-    const totalCount = data.length;
-    if (totalCount === 0) {
-      return null;
-    }
-    return Math.round((completedCount / totalCount) * 100);
+    const totalCompletedCount = data.filter((item) => item.isCompleted).length;
+    const totalItemCount = data.length;
+    return totalItemCount ? ((totalCompletedCount / totalItemCount) * 100).toFixed(2) : null;
   };
-
+  // 진행률에 따라 색깔 구분
+  // const getBackgroundColor = (progress: string | null) => {
+  //   if (progress === null) {
+  //     return '#ccc'; // 기본 배경색
+  //   }
+  //   const numericProgress = parseFloat(progress);
+  //   if (isNaN(numericProgress)) {
+  //     return '#ccc';
+  //   } else if (numericProgress < 40) {
+  //     return 'red'; // 40 미만일 때 빨간색
+  //   } else if (numericProgress < 70) {
+  //     return 'yellow'; // 40 초과 70 미만일 때 노란색
+  //   } else {
+  //     return '#4CAF50'; // 71 이상일 때 초록색
+  //   }
+  // };
   // 등록 하기
   const addNewContent = async (newContent: NewContent) => {
     try {
@@ -141,7 +153,15 @@ function DataPush() {
           isCompleted: updatedIsCompleted
         };
         await updateDoc(docRef, dataToUpdate);
-        queryClient.invalidateQueries('contents');
+        // queryClient.invalidateQueries('contents');
+        const contentsRef = collection(db, 'contents');
+        const queryContents = query(contentsRef, orderBy('createdAt', 'asc'));
+        const querySnapshot = await getDocs(queryContents);
+        const newData: any[] = [];
+        querySnapshot.forEach((doc: any) => {
+          newData.push({ id: doc.id, ...doc.data() });
+        });
+        setData(newData);
       }
     } catch (error) {
       console.error('할 일 완료 처리 중 오류가 발생했습니다.', error);
@@ -179,7 +199,7 @@ function DataPush() {
           <label>여기에 데이터 가져오기</label>
           <br />
           <div>
-            {data.map((item) => (
+            {data.map((item, index) => (
               <div key={item.id}>
                 {editItemId === item.id ? (
                   <form
@@ -218,27 +238,27 @@ function DataPush() {
                     <p>작성 시간: {renderDate(item.createdAt)}</p>
                   </>
                 )}
-                <div>
-                  <div
-                    style={{
-                      width: '200px',
-                      border: '1px solid #ccc',
-                      borderRadius: '5px'
-                    }}
-                  >
-                    <div
-                      style={{
-                        width: `${completionBar()}%`,
-                        height: '20px',
-                        backgroundColor: '#4CAF50',
-                        borderRadius: '5px'
-                      }}
-                    />
-                  </div>
-                  <span>진행률 : {completionBar()}%</span>
-                </div>
               </div>
             ))}
+            <div>
+              <div
+                style={{
+                  width: '200px',
+                  border: '1px solid #ccc',
+                  borderRadius: '5px'
+                }}
+              >
+                <div
+                  style={{
+                    width: `${completionBar()}%`,
+                    height: '20px',
+                    backgroundColor: '#4CAF50',
+                    borderRadius: '5px'
+                  }}
+                />
+              </div>
+              <span>진행률 : {completionBar()}%</span>
+            </div>
           </div>
         </div>
       </div>
