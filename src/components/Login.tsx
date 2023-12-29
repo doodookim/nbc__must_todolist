@@ -1,39 +1,28 @@
-import { ChangeEvent, FormEvent, useState } from 'react';
+import { signInWithEmailAndPassword } from 'firebase/auth';
+import { useState } from 'react';
+import { auth } from '../firebase';
 
-function LoginPage() {
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
+function Login() {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
 
-    const onEmailHandler = (e: ChangeEvent<HTMLInputElement>) => {
-        setEmail(e.target.value);
-    };
+  const handleLogin = async () => {
+    try {
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      console.log(userCredential);
+    } catch (error: any) {
+      console.error(error);
+    }
+  };
 
-    const onPasswordHandler = (e: ChangeEvent<HTMLInputElement>) => {
-        setPassword(e.target.value);
-    };
-
-    const onSubmitHandler = (e: FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-       
-    };
-
-    return (
-        <div style={{ 
-            display: 'flex', justifyContent: 'center', alignItems: 'center', 
-            width: '100%', height: '100vh'
-        }}>
-            <form style={{ display: 'flex', flexDirection: 'column'}} onSubmit={onSubmitHandler}>
-                <label>Email</label>
-                <input type='email' value={email} onChange={onEmailHandler}/>
-                <label>Password</label>
-                <input type='password' value={password} onChange={onPasswordHandler}/>
-                <br />
-                <button type='submit'>
-                    Login
-                </button>
-            </form>
-        </div>
-    )
+  return (
+    <div>
+      <h2>로그인</h2>
+      <input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
+      <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
+      <button onClick={handleLogin}>로그인</button>
+    </div>
+  );
 }
 
-export default LoginPage;
+export default Login;
