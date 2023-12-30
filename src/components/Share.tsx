@@ -12,7 +12,6 @@ const Share = () => {
     Kakao.cleanup();
     Kakao.init('e58f0398cda8e3595e39dfe5889efad2');
   }, []);
-
   const SHARE_URL: string = 'http://localhost:3000/share';
   const handleShareKakaoButton = () => {
     Kakao.Share.sendDefault({
