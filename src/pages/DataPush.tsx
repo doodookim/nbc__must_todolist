@@ -1,3 +1,4 @@
+import { addDays, endOfDay } from 'date-fns';
 import {
   CollectionReference,
   addDoc,
@@ -22,6 +23,9 @@ interface NewContent {
 }
 
 function DataPush() {
+  const [hour, setHour] = useState(23 - new Date().getHours()); // 남은 시간 단위
+  const [minute, setMinute] = useState(59 - new Date().getMinutes()); // 남은 분 단위
+  const [second, setSecond] = useState(59 - new Date().getSeconds()); // 남은 초 단위
   const [contents, setContents] = useState(''); // 내용 입력 상태
   const [isCompleted, setIsCompleted] = useState(false); // 완료 상태
   const [data, setData] = useState<any[]>([]); // firebase 데이터 상태
@@ -29,11 +33,21 @@ function DataPush() {
   const [editContents, setEditContents] = useState(''); // 내용 수정 상태
   const queryClient = useQueryClient(); // 쿼리 클라이언트 인스턴스
 
+  // 남은 시간 초 단위로 렌더링 되도록 하는 useEffect
+  useEffect(() => {
+    const id = setInterval(() => {
+      setHour(23 - new Date().getHours());
+      setMinute(59 - new Date().getMinutes());
+      setSecond(59 - new Date().getSeconds());
+    }, 1000);
+    return () => clearInterval(id);
+  }, []);
+
   // 진행률 나타내는 함수
   const completionBar = () => {
     const totalCompletedCount = data.filter((item) => item.isCompleted).length;
     const totalItemCount = data.length;
-    return totalItemCount ? ((totalCompletedCount / totalItemCount) * 100).toFixed(2) : null;
+    return totalItemCount ? (totalCompletedCount / totalItemCount) * 100 : null;
   };
   // 진행률에 따라 색깔 구분
   // const getBackgroundColor = (progress: string | null) => {
@@ -168,6 +182,20 @@ function DataPush() {
     }
   };
 
+  // 데드라인 계산 함수
+  const calculateDeadline = (createdAt: any) => {
+    const validHours = 24; // 유효 시간
+    const deadline = addDays(endOfDay(createdAt.toDate()), 1); // 다음 날 자정
+    const remainingTime = deadline.getTime() - Date.now();
+    const remainingHours = Math.floor(remainingTime / (60 * 60 * 1000));
+
+    // if (remainingHours <= validHours) {
+    //   return `${remainingHours}시간 남음`;
+    // } else {
+    //   return '유효 기간 종료';
+    // }
+  };
+
   useEffect(() => {
     if (fetchedData) {
       setData(fetchedData);
@@ -198,7 +226,10 @@ function DataPush() {
         <div>
           <label>여기에 데이터 가져오기</label>
           <br />
+
           <div>
+            오늘 하루 남은 시간 : {hour < 10 ? '0' + hour : hour}: {minute < 10 ? '0' + minute : minute}:{' '}
+            {second < 10 ? '0' + second : second}
             {data.map((item, index) => (
               <div key={item.id}>
                 {editItemId === item.id ? (
@@ -236,29 +267,33 @@ function DataPush() {
                     </button>
 
                     <p>작성 시간: {renderDate(item.createdAt)}</p>
+                    {/* <p>남은 시간: {calculateDeadline(item.createdAt)}</p> */}
                   </>
                 )}
               </div>
             ))}
-            <div>
-              <div
-                style={{
-                  width: '200px',
-                  border: '1px solid #ccc',
-                  borderRadius: '5px'
-                }}
-              >
+            {data.length > 0 && (
+              <div>
                 <div
                   style={{
-                    width: `${completionBar()}%`,
-                    height: '20px',
-                    backgroundColor: '#4CAF50',
+                    width: '200px',
+                    border: '1px solid #ccc',
                     borderRadius: '5px'
                   }}
-                />
+                >
+                  <div
+                    style={{
+                      width: `${completionBar()}%`,
+                      height: '20px',
+                      backgroundColor: '#4CAF50',
+                      borderRadius: '5px'
+                    }}
+                  />
+                </div>
+
+                <span>진행률 : {completionBar()}%</span>
               </div>
-              <span>진행률 : {completionBar()}%</span>
-            </div>
+            )}
           </div>
         </div>
       </div>
