@@ -14,7 +14,6 @@ import {
 import { useEffect, useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { db } from '../firebase';
-
 // 새로운 컨텐츠 형식 정의하는 인터페이스
 interface NewContent {
   contents: string;
