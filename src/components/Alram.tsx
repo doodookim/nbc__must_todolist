@@ -14,6 +14,7 @@ getMessage
       console.log(currentToken);
       temp = currentToken;
       alert('토큰: ' + currentToken);
+      localStorage.setItem('message', currentToken);
       // 토큰을 서버에 전달...
     } else {
       // Show permission request UI
