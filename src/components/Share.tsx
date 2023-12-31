@@ -12,7 +12,7 @@ const Share = () => {
     Kakao.cleanup();
     Kakao.init('e58f0398cda8e3595e39dfe5889efad2');
   }, []);
-  const SHARE_URL: string = 'http://localhost:3000/share';
+  const SHARE_URL: string = 'http://localhost:3000';
   const handleShareKakaoButton = () => {
     Kakao.Share.sendDefault({
       objectType: 'feed',
