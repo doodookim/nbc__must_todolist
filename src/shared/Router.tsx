@@ -1,4 +1,5 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import Alram from '../components/Alram';
 import Share from '../components/Share';
 import Layout from '../layout/Layout';
 import Login from '../pages/Login';
@@ -12,6 +13,7 @@ const Router = () => {
           <Route path="/" element={<Main />} />
           <Route path="Login" element={<Login />} />
           <Route path="Share" element={<Share />} />
+          <Route path="Alram" element={<Alram />} />
         </Route>
       </Routes>
     </BrowserRouter>
