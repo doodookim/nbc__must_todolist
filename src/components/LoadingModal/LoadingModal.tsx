@@ -1,7 +1,7 @@
 // LoadingModal.tsx
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { RootState } from '../store'; // 경로에 주의하세요
+import { RootState } from '../../redux/store/store'; // 경로에 주의하세요
 import './LoadingModal.css';
 
 const LoadingModal: React.FC = () => {

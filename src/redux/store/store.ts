@@ -1,7 +1,7 @@
 // store.ts
 import { configureStore } from '@reduxjs/toolkit';
+import loadingReducer from '../../features/loading/loadingSlice';
 import MustTodoReducer from '../modules/MustTodoSlice';
-import loadingReducer from './components/features/loadingSlice';
 
 export const store = configureStore({
   reducer: {
