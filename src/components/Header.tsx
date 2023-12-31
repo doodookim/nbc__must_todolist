@@ -9,7 +9,7 @@ const Header = () => {
   return (
     <StHeader>
       <div onClick={HandleLogoClick}>
-        <img src={logo} alt="logo" />
+        <img src={logo} alt='logo' />
         <span>자기, 내가 부탁한 건 다 했어?</span>
       </div>
     </StHeader>
