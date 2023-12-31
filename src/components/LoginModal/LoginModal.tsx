@@ -1,5 +1,4 @@
-import firebase from 'firebase/app';
-import 'firebase/auth';
+import { getAuth, signInWithEmailAndPassword } from 'firebase/auth'; // Firebase 모듈식 가져오기
 import React, { FormEvent, useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 interface LoginModalProps {
@@ -29,12 +28,17 @@ const LoginModal: React.FC<LoginModalProps> = ({ onClose }) => {
 
   const handleLogin = async (event: FormEvent) => {
     event.preventDefault();
+    const auth = getAuth(); // Firebase Auth 인스턴스 가져오기
+
     try {
-      await firebase.auth().signInWithEmailAndPassword(email, password);
-      // 로그인 성공 여부 확인
+      await signInWithEmailAndPassword(auth, email, password); // signInWithEmailAndPassword 사용
+      // 로그인 성공 처리 (예: 페이지 이동)
+      navigate('/dashboard'); // 성공 시 이동할 경로 예시
     } catch (error) {
-      if (error instanceof firebase.auth.AuthError) {
-        switch (error.code) {
+      if (error instanceof Error) {
+        // 오류 타입 확인 및 처리
+        const errorCode = error.code;
+        switch (errorCode) {
           case 'auth/user-not-found':
             setLoginError('존재하지 않는 ID입니다');
             break;
