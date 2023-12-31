@@ -42,7 +42,7 @@ const Share = () => {
         handleShareKakaoButton();
       }}
     >
-      Share
+      Share1
     </button>
   );
 };
