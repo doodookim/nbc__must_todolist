@@ -1,13 +1,13 @@
 import './App.css';
+import Router from './shared/Router';
 import GlobalStyle from './styled/GlobalStyle';
 
 function App() {
   return (
     <>
       <GlobalStyle />
-      <div>안녕하세요</div>
-      <div>안녕하세요</div>
-      <div>안녕하세요</div>
+
+      <Router />
     </>
   );
 }
