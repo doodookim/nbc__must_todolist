@@ -1,7 +1,7 @@
-import React from "react";
-import ModalBg from "./ModalBg";
-import Button from "./Button";
-import { Modal } from "../types/global";
+import styled from 'styled-components';
+import { Modal } from '../types/global';
+import Button from './Button';
+import ModalBg from './ModalBg';
 
 function ModifyModal({ onClose }: Modal) {
   const registerHandler = () => {};
@@ -12,23 +12,13 @@ function ModifyModal({ onClose }: Modal) {
         <div className="flex justify-between">
           <span>수정하기</span>
           <div onClick={onClose}>
-            <svg
-              width="16"
-              height="16"
-              viewBox="0 0 89 89"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M10.5 10L79 78.5M79 10L10.5 78.5"
-                stroke="black"
-                stroke-width="3"
-              />
+            <svg width="16" height="16" viewBox="0 0 89 89" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M10.5 10L79 78.5M79 10L10.5 78.5" stroke="black" stroke-width="3" />
             </svg>
           </div>
         </div>
         <div>
-          <input type="text" placeholder="할 일을 적어주세요" />
+          <input type="text" placeholder="할 일을 적어주세요!" />
         </div>
         <div>
           <Button text="등록" onClick={registerHandler} />
@@ -39,3 +29,8 @@ function ModifyModal({ onClose }: Modal) {
 }
 
 export default ModifyModal;
+
+const StAddListModal = styled.div`
+  width: 200px;
+  display: flex;
+`;

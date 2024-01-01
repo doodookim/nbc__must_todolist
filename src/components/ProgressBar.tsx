@@ -1,29 +1,20 @@
-import React from 'react'
-
-type ProgressBarType = {
-  total: number,
-  current: number,
+interface ProgressBarProps {
+  completionBar: number | null;
 }
-
-function ProgressBar({ current, total }: ProgressBarType) {
-
-  function calculateProgress(current: number, total: number) {
-    if (total <= 0) {
-      return 0; 
-    }
-
-    const progress = (current / total) * 100;
-    return Math.min(100, Math.max(0, progress)).toFixed(2); 
-  }
-
+const ProgressBar = ({ completionBar }: ProgressBarProps) => {
   return (
-    <div className='progress'>
-      <div className='content'>진행률 : {`${calculateProgress(current,total)}%`}</div>
-      <div className='status-bar'>
-        <div className='bar' style={{ width: `${calculateProgress(current,total)}%` }}></div>
-      </div>
-    </div>
-  )
-}
+    <div>
+      {completionBar !== null && completionBar > 0 && (
+        <div style={{ width: '200px', border: '1px solid #ccc', borderRadius: '5px' }}>
+          <div
+            style={{ width: `${completionBar}%`, height: '20px', backgroundColor: '#4CAF50', borderRadius: '5px' }}
+          />
+        </div>
+      )}
 
-export default ProgressBar
+      {completionBar !== null && <span>진행률 : {completionBar}%</span>}
+    </div>
+  );
+};
+
+export default ProgressBar;

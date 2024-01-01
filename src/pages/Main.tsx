@@ -9,6 +9,7 @@ const Main = () => {
     <QueryClientProvider client={queryClient}>
       <NoList />
       <DataPush />
+
       <Share />
     </QueryClientProvider>
   );

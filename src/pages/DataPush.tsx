@@ -1,4 +1,3 @@
-import { addDays, endOfDay } from 'date-fns';
 import {
   CollectionReference,
   addDoc,
@@ -13,7 +12,10 @@ import {
 } from 'firebase/firestore';
 import { useEffect, useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
+import Item from '../components/\bItem';
+import ProgressBar from '../components/ProgressBar';
 import { db } from '../firebase';
+
 // 새로운 컨텐츠 형식 정의하는 인터페이스
 interface NewContent {
   contents: string;
@@ -46,24 +48,10 @@ function DataPush() {
   const completionBar = () => {
     const totalCompletedCount = data.filter((item) => item.isCompleted).length;
     const totalItemCount = data.length;
-    return totalItemCount ? (totalCompletedCount / totalItemCount) * 100 : null;
+    const completionPercentage = totalItemCount ? (totalCompletedCount / totalItemCount) * 100 : null;
+    return completionPercentage !== null ? +completionPercentage.toFixed(2) : null;
   };
-  // 진행률에 따라 색깔 구분
-  // const getBackgroundColor = (progress: string | null) => {
-  //   if (progress === null) {
-  //     return '#ccc'; // 기본 배경색
-  //   }
-  //   const numericProgress = parseFloat(progress);
-  //   if (isNaN(numericProgress)) {
-  //     return '#ccc';
-  //   } else if (numericProgress < 40) {
-  //     return 'red'; // 40 미만일 때 빨간색
-  //   } else if (numericProgress < 70) {
-  //     return 'yellow'; // 40 초과 70 미만일 때 노란색
-  //   } else {
-  //     return '#4CAF50'; // 71 이상일 때 초록색
-  //   }
-  // };
+
   // 등록 하기
   const addNewContent = async (newContent: NewContent) => {
     try {
@@ -103,7 +91,7 @@ function DataPush() {
       console.error('데이터 전송 에러:', error);
     }
   };
-
+  // 데이터 가져오기
   const {
     isLoading,
     isError,
@@ -182,18 +170,18 @@ function DataPush() {
   };
 
   // 데드라인 계산 함수
-  const calculateDeadline = (createdAt: any) => {
-    const validHours = 24; // 유효 시간
-    const deadline = addDays(endOfDay(createdAt.toDate()), 1); // 다음 날 자정
-    const remainingTime = deadline.getTime() - Date.now();
-    const remainingHours = Math.floor(remainingTime / (60 * 60 * 1000));
+  // const calculateDeadline = (createdAt: any) => {
+  //   const validHours = 24; // 유효 시간
+  //   const deadline = addDays(endOfDay(createdAt.toDate()), 1); // 다음 날 자정
+  //   const remainingTime = deadline.getTime() - Date.now();
+  //   const remainingHours = Math.floor(remainingTime / (60 * 60 * 1000));
 
-    // if (remainingHours <= validHours) {
-    //   return `${remainingHours}시간 남음`;
-    // } else {
-    //   return '유효 기간 종료';
-    // }
-  };
+  // if (remainingHours <= validHours) {
+  //   return `${remainingHours}시간 남음`;
+  // } else {
+  //   return '유효 기간 종료';
+  // }
+  // };
 
   useEffect(() => {
     if (fetchedData) {
@@ -231,73 +219,24 @@ function DataPush() {
             {second < 10 ? '0' + second : second}
             {data.map((item, index) => (
               <div key={item.id}>
-                {editItemId === item.id ? (
-                  <form
-                    onSubmit={(event) => {
-                      updateItemHandler(event, item.id);
-                    }}
-                  >
-                    <textarea value={editContents} onChange={(event) => setEditContents(event.target.value)} />
-                    <button type="submit">수정완료</button>
-                  </form>
-                ) : (
-                  <>
-                    {item.contents}
-                    <button
-                      onClick={() => {
-                        editItemHandler(item.id);
-                      }}
-                    >
-                      수정
-                    </button>
-                    <button
-                      onClick={() => {
-                        toggleCompletionHandler(item.id);
-                      }}
-                    >
-                      {item.isCompleted ? '완료 취소' : '완료'}
-                    </button>
-                    <button
-                      onClick={() => {
-                        deleteItem(item.id);
-                      }}
-                    >
-                      삭제
-                    </button>
-
-                    <p>작성 시간: {renderDate(item.createdAt)}</p>
-                    {/* <p>남은 시간: {calculateDeadline(item.createdAt)}</p> */}
-                  </>
-                )}
+                <Item
+                  item={item}
+                  editItemId={editItemId}
+                  onEditItem={editItemHandler}
+                  onToggleCompletion={toggleCompletionHandler}
+                  onDeleteItem={deleteItem}
+                  onUpdateItem={updateItemHandler}
+                  renderDate={renderDate}
+                  editContents={editContents}
+                  onEditContentsChange={setEditContents}
+                />
               </div>
             ))}
-            {data.length > 0 && (
-              <div>
-                <div
-                  style={{
-                    width: '200px',
-                    border: '1px solid #ccc',
-                    borderRadius: '5px'
-                  }}
-                >
-                  <div
-                    style={{
-                      width: `${completionBar()}%`,
-                      height: '20px',
-                      backgroundColor: '#4CAF50',
-                      borderRadius: '5px'
-                    }}
-                  />
-                </div>
-
-                <span>진행률 : {completionBar()}%</span>
-              </div>
-            )}
+            {completionBar() !== null && <ProgressBar completionBar={completionBar()} />}
           </div>
         </div>
       </div>
     </>
   );
 }
-
 export default DataPush;
