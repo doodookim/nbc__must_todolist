@@ -13,6 +13,7 @@ import {
 } from 'firebase/firestore';
 import { useEffect, useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
+import { webPushAlarm } from '../components/Alarm';
 import { db } from '../firebase';
 // 새로운 컨텐츠 형식 정의하는 인터페이스
 interface NewContent {
@@ -235,6 +236,7 @@ function DataPush() {
                   <form
                     onSubmit={(event) => {
                       updateItemHandler(event, item.id);
+                      webPushAlarm(item.id, 'UPDATE', item.contents);
                     }}
                   >
                     <textarea value={editContents} onChange={(event) => setEditContents(event.target.value)} />
@@ -253,6 +255,7 @@ function DataPush() {
                     <button
                       onClick={() => {
                         toggleCompletionHandler(item.id);
+                        webPushAlarm(item.id, 'COMPLETE', item.contents, item.isCompleted);
                       }}
                     >
                       {item.isCompleted ? '완료 취소' : '완료'}
@@ -260,6 +263,7 @@ function DataPush() {
                     <button
                       onClick={() => {
                         deleteItem(item.id);
+                        webPushAlarm(item.id, 'DELETE', item.contents, item.isCompleted);
                       }}
                     >
                       삭제
