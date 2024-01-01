@@ -169,20 +169,6 @@ function DataPush() {
     }
   };
 
-  // 데드라인 계산 함수
-  // const calculateDeadline = (createdAt: any) => {
-  //   const validHours = 24; // 유효 시간
-  //   const deadline = addDays(endOfDay(createdAt.toDate()), 1); // 다음 날 자정
-  //   const remainingTime = deadline.getTime() - Date.now();
-  //   const remainingHours = Math.floor(remainingTime / (60 * 60 * 1000));
-
-  // if (remainingHours <= validHours) {
-  //   return `${remainingHours}시간 남음`;
-  // } else {
-  //   return '유효 기간 종료';
-  // }
-  // };
-
   useEffect(() => {
     if (fetchedData) {
       setData(fetchedData);
