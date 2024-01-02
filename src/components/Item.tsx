@@ -1,3 +1,4 @@
+import { webPushAlarm } from '../components/Alarm';
 // Item
 // 등록된 개별 리스트의 상태 관리 컴포넌트
 
@@ -43,9 +44,31 @@ const ItemComponent = ({
     ) : (
       <>
         {item.contents}
-        <button onClick={() => onEditItem(item.id)}>수정</button>
-        <button onClick={() => onToggleCompletion(item.id)}>{item.isCompleted ? '완료 취소' : '완료'}</button>
-        <button onClick={() => onDeleteItem(item.id)}>삭제</button>
+        <button
+          onClick={() => {
+            onEditItem(item.id);
+            webPushAlarm(item.id, 'UPDATE', item.contents);
+          }}
+        >
+          수정
+        </button>
+        <button
+          onClick={() => {
+            onToggleCompletion(item.id);
+            webPushAlarm(item.id, 'COMPLETE', item.contents);
+          }}
+        >
+          {item.isCompleted ? '완료 취소' : '완료'}
+        </button>
+        <button
+          onClick={() => {
+            onDeleteItem(item.id);
+            webPushAlarm(item.id, 'DELETE', item.contents);
+          }}
+        >
+          삭제
+        </button>
+
         <p>작성 시간: {renderDate(item.createdAt)}</p>
       </>
     )}

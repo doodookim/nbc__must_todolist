@@ -1,20 +1,44 @@
+import styled from 'styled-components';
+
 interface ProgressBarProps {
   completionBar: number | null;
 }
 const ProgressBar = ({ completionBar }: ProgressBarProps) => {
   return (
-    <div>
+    <StProgressContainer>
       {completionBar !== null && completionBar > 0 && (
-        <div style={{ width: '200px', border: '1px solid #ccc', borderRadius: '5px' }}>
+        <StProgressBar>
           <div
-            style={{ width: `${completionBar}%`, height: '20px', backgroundColor: '#4CAF50', borderRadius: '5px' }}
+            style={{
+              width: `${completionBar}%`,
+              height: '20px',
+              backgroundColor: '#dd94b3',
+              borderRadius: '5px'
+            }}
           />
-        </div>
+        </StProgressBar>
       )}
 
-      {completionBar !== null && <span>진행률 : {completionBar}%</span>}
-    </div>
+      <StPercentage> {completionBar !== null && <span>진행률 : {completionBar}%</span>}</StPercentage>
+    </StProgressContainer>
   );
 };
 
 export default ProgressBar;
+
+const StProgressContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+`;
+
+const StProgressBar = styled.div`
+  width: 300px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  justify-content: space-between;
+  margin-left: 30px;
+`;
+const StPercentage = styled.div`
+  margin-top: 5px;
+  margin-right: 42px;
+`;
