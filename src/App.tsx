@@ -17,25 +17,17 @@
 // }
 
 // export default App;
+// App.tsx
+// App.tsx
 import { useState } from 'react';
-import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
-import SignUpModal from './components/SignupModal/SignupModal'; // 회원가입 모달 컴포넌트 import
-import Main from './pages/Main';
+import Router from './shared/Router';
 
 function App(): JSX.Element {
-  const [showSignUp, setShowSignUp] = useState(false); // 회원가입 모달 상태
+  const [showSignUp, setShowSignUp] = useState(false);
+  const [showLogin, setShowLogin] = useState(false);
 
   return (
-    <>
-      {showSignUp && <SignUpModal onClose={() => setShowSignUp(false)} />}
-
-      <Router>
-        <Routes>
-          <Route path="/" element={<Main onShowSignUp={() => setShowSignUp(true)} />} />
-          {/* 다른 라우트들이 필요하다면 여기에 추가 */}
-        </Routes>
-      </Router>
-    </>
+    <Router showSignUp={showSignUp} setShowSignUp={setShowSignUp} showLogin={showLogin} setShowLogin={setShowLogin} />
   );
 }
 
