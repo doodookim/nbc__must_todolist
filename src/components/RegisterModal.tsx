@@ -1,10 +1,16 @@
+import { collection, getDocs, orderBy, query, where } from 'firebase/firestore';
 import { useState } from 'react';
 import { MdAdd, MdDelete, MdDone } from 'react-icons/md';
+import { useQuery } from 'react-query';
 import styled from 'styled-components';
 import closebutton from '../assets/closebutton.png';
+import { db } from '../firebase';
 import { Modal } from '../types/global';
 
 function RegisterModal({ onClose }: Modal) {
+  const newDate = new Date();
+  const today = `${newDate.getFullYear()}-${newDate.getMonth() + 1}-${newDate.getDate()}`;
+
   const [showInput, setShowInput] = useState(false);
   const [open, setOpen] = useState(false);
   const [done, setDone] = useState(false);
@@ -28,6 +34,23 @@ function RegisterModal({ onClose }: Modal) {
   //     registerHandler(); // 작성완료 버튼과 동일한 동작 수행
   //   }
   // };
+  const {
+    isLoading,
+    isError,
+    data: fetchedData
+  } = useQuery(['contents', { date: today }], async () => {
+    const contentsRef = collection(db, 'contents');
+    const midnight = new Date(today);
+    const queryContents = query(contentsRef, where('createdAt', '>=', midnight), orderBy('createdAt', 'asc'));
+    const querySnapshot = await getDocs(queryContents);
+    const newData = querySnapshot.docs.map((doc) => ({
+      id: doc.id,
+      contents: doc.data().contents,
+      isCompleted: doc.data().isCompleted,
+      createdAt: doc.data().createdAt.toDate()
+    }));
+    return newData;
+  });
 
   return (
     <StAddListModal>
@@ -38,23 +61,28 @@ function RegisterModal({ onClose }: Modal) {
             <img className="close" src={closebutton} alt="closebutton" onClick={onClose} />
           </div>
           <div className="middle-list">
-            <h1>2024년 1월 2일</h1>
+            <h1>{today}</h1>
             <div className="day">화요일</div>
             <div className="remain-task">남은 할 일 : 2개</div>
           </div>
         </StModalHead>
 
-        <StModalContent>
-          <StTodoItem>
-            <StFinishTodo onClick={onToggleFinish} done={done}>
-              {done && <MdDone />}
-            </StFinishTodo>
-            <StTodoText>할일 1</StTodoText>
-            <StRemoveTodo done={done}>
-              <MdDelete />
-            </StRemoveTodo>
-          </StTodoItem>
-        </StModalContent>
+        {fetchedData?.map((item) => (
+          <div key={item.id}>
+            <StModalContent>
+              <StTodoItem>
+                <StFinishTodo onClick={onToggleFinish} done={done}>
+                  <MdDone />
+                </StFinishTodo>
+                <StTodoText>{item.contents}</StTodoText>
+                <StRemoveTodo done={done}>
+                  <MdDelete />
+                </StRemoveTodo>
+              </StTodoItem>
+            </StModalContent>
+          </div>
+        ))}
+
         {open && (
           <StFormContainer>
             <StForm>
@@ -254,7 +282,7 @@ const StCreateButton = styled.button<{ open: boolean }>`
   font-size: 60px;
   position: absolute;
   left: 50%;
-  bottom: 150px;
+  bottom: 100px;
   transform: translate(-50%, 50%);
   color: white;
   border-radius: 50%;

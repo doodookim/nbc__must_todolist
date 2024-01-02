@@ -12,7 +12,7 @@ import {
 } from 'firebase/firestore';
 import { useEffect, useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
-import Item from '../components/\bItem';
+import Item from '../components/Item';
 // import AddList from '../components/AddList';
 import ProgressBar from '../components/ProgressBar';
 import { db } from '../firebase';
@@ -101,11 +101,16 @@ function DataPush() {
     const contentsRef = collection(db, 'contents');
     const queryContents = query(contentsRef, orderBy('createdAt', 'asc'));
     const querySnapshot = await getDocs(queryContents);
-    const newData: any[] = [];
-    querySnapshot.forEach((doc: any) => {
-      newData.push({ id: doc.id, ...doc.data() });
-    });
-    return newData;
+    const newData = querySnapshot.docs.map((doc) => ({
+      id: doc.id,
+      contents: doc.data().contents,
+      isCompleted: doc.data().isCompleted,
+      createdAt: doc.data().createdAt
+    }));
+    // ((doc: any) => {
+    //   newData.push({ id: doc.id, ...doc.data() });
+    // });
+    return newData || [];
   });
 
   // 수정 하기
@@ -204,7 +209,7 @@ function DataPush() {
           <div>
             오늘 하루 남은 시간 : {hour < 10 ? '0' + hour : hour}: {minute < 10 ? '0' + minute : minute}:{' '}
             {second < 10 ? '0' + second : second}
-            {data.map((item, index) => (
+            {fetchedData?.map((item, index) => (
               <div key={item.id}>
                 <Item
                   item={item}

@@ -2,7 +2,6 @@ import { useState } from 'react';
 import styled from 'styled-components';
 import Button from './Button';
 import RegisterModal from './RegisterModal';
-
 function NoList() {
   const [modal, setModal] = useState(false);
 
@@ -45,6 +44,4 @@ const StNolist = styled.div`
   align-items: center;
   justify-content: center;
   font-size: 30px;
-  button {
-  }
 `;
