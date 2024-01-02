@@ -1,7 +1,8 @@
-import { FirebaseError } from '@firebase/util'; // 오류 타입 import
+import { FirebaseError } from '@firebase/util';
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
 import React, { FormEvent, useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import './LoginModal.css';
 
 interface LoginModalProps {
   onClose: () => void;
@@ -34,7 +35,7 @@ const LoginModal: React.FC<LoginModalProps> = ({ onClose }) => {
 
     try {
       await signInWithEmailAndPassword(auth, email, password);
-      navigate('/dashboard'); // 로그인 성공 시 이동할 경로
+      navigate('/'); // 로그인 성공 시 메인 페이지로 리다이렉트
     } catch (error) {
       if (error instanceof FirebaseError) {
         const errorCode = error.code;
