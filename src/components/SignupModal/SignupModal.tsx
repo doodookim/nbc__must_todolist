@@ -8,12 +8,12 @@ interface SignUpModalProps {
 }
 
 const SignUpModal: React.FC<SignUpModalProps> = ({ onClose }) => {
-  const [username, setUsername] = useState<string>(''); // 사용자 아이디
-  const [email, setEmail] = useState<string>(''); // 이메일
-  const [password, setPassword] = useState<string>(''); // 비밀번호
-  const [confirmPassword, setConfirmPassword] = useState<string>(''); // 비밀번호 확인
-  const [errorMessage, setErrorMessage] = useState<string>(''); // 오류 메시지
-  const [isSignUpSuccess, setIsSignUpSuccess] = useState<boolean>(false); // 회원가입 성공 여부
+  const [username, setUsername] = useState<string>('');
+  const [email, setEmail] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
+  const [confirmPassword, setConfirmPassword] = useState<string>('');
+  const [errorMessage, setErrorMessage] = useState<string>('');
+  const [isSignUpSuccess, setIsSignUpSuccess] = useState<boolean>(false);
 
   const modalRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
@@ -49,14 +49,10 @@ const SignUpModal: React.FC<SignUpModalProps> = ({ onClose }) => {
 
       if (user) {
         const userRef = doc(firestore, 'users', user.uid);
-        await setDoc(userRef, {
-          username, // 아이디 저장
-          email
-        });
+        await setDoc(userRef, { username, email });
 
         console.log('회원가입 성공:', user);
         setIsSignUpSuccess(true);
-        // 추가적인 성공 처리 (예: 로그인 페이지로 이동)
       }
     } catch (error) {
       if (error instanceof Error) {
@@ -74,7 +70,7 @@ const SignUpModal: React.FC<SignUpModalProps> = ({ onClose }) => {
           <button
             onClick={() => {
               onClose();
-              navigate('/'); // 홈페이지 또는 다른 페이지로 이동
+              navigate('/');
             }}
           >
             홈페이지로 이동
@@ -85,28 +81,102 @@ const SignUpModal: React.FC<SignUpModalProps> = ({ onClose }) => {
   }
 
   return (
-    <div className="modal" ref={modalRef}>
-      <div className="modal-content">
-        <span className="close" onClick={onClose}>
-          &times;
-        </span>
-        <form onSubmit={handleSignUp}>
-          <input type="text" value={username} onChange={(e) => setUsername(e.target.value)} placeholder="아이디 입력" />
-          <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="이메일 입력" />
+    <div
+      style={{
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        zIndex: 1000
+      }}
+      ref={modalRef}
+    >
+      <div
+        style={{
+          backgroundColor: '#FFDCE9',
+          padding: '20px',
+          borderRadius: '10px',
+          width: 'auto',
+          maxWidth: '750px',
+          minHeight: '250px',
+          margin: '0 auto',
+          boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center'
+        }}
+      >
+        <h2 style={{ margin: '0 0 20px 0', fontWeight: 'bold', fontSize: '18pt', color: '#ff70a2' }}>회원가입</h2>
+        <form onSubmit={handleSignUp} style={{ width: '100%' }}>
+          <input
+            type="text"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            placeholder="아이디 입력"
+            style={{ width: '95%', padding: '10px', margin: '10px 0', border: '1px solid #ddd', borderRadius: '4px' }}
+          />
+          <input
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="이메일 입력"
+            style={{ width: '95%', padding: '10px', margin: '10px 0', border: '1px solid #ddd', borderRadius: '4px' }}
+          />
           <input
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             placeholder="비밀번호 입력"
+            style={{ width: '95%', padding: '10px', margin: '10px 0', border: '1px solid #ddd', borderRadius: '4px' }}
           />
           <input
             type="password"
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
             placeholder="비밀번호 재입력"
+            style={{ width: '95%', padding: '10px', margin: '10px 0', border: '1px solid #ddd', borderRadius: '4px' }}
           />
-          {errorMessage && <p>{errorMessage}</p>}
-          <button type="submit">회원가입</button>
+          {errorMessage && <p style={{ color: 'red', width: '75%' }}>{errorMessage}</p>}
+          <button
+            type="submit"
+            style={{
+              width: '100%',
+              padding: '10px',
+              backgroundColor: '#e2f2ff',
+              color: 'black',
+              border: 'none',
+              borderRadius: '4px',
+              cursor: 'pointer',
+              fontSize: '13pt',
+              fontWeight: 'bold',
+              justifyContent: 'center'
+            }}
+          >
+            회원가입
+          </button>
+          <button
+            onClick={onClose}
+            style={{
+              width: '100%',
+              padding: '10px',
+              marginTop: '10px',
+              backgroundColor: '#fff7fa',
+              color: 'black',
+              border: 'none',
+              borderRadius: '4px',
+              cursor: 'pointer',
+              fontSize: '13pt',
+              fontWeight: 'bold',
+              justifyContent: 'center'
+            }}
+          >
+            닫기
+          </button>
         </form>
       </div>
     </div>

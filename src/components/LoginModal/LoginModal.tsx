@@ -1,8 +1,7 @@
-import { FirebaseError } from '@firebase/util'; // 오류 타입 import
+import { FirebaseError } from '@firebase/util';
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
 import React, { FormEvent, useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import './LoginModal.css';
 
 interface LoginModalProps {
   onClose: () => void;
@@ -35,7 +34,7 @@ const LoginModal: React.FC<LoginModalProps> = ({ onClose }) => {
 
     try {
       await signInWithEmailAndPassword(auth, email, password);
-      navigate('/dashboard'); // 로그인 성공 시 이동할 경로
+      navigate('/dashboard');
     } catch (error) {
       if (error instanceof FirebaseError) {
         const errorCode = error.code;
@@ -47,7 +46,7 @@ const LoginModal: React.FC<LoginModalProps> = ({ onClose }) => {
             setLoginError('비밀번호가 일치하지 않습니다');
             break;
           default:
-            setLoginError('로그인에 실패했습니다');
+            setLoginError('이메일과 비밀번호를 다시 한번 확인해주세요!');
         }
       } else {
         setLoginError('로그인 시도 중 오류가 발생했습니다');
@@ -56,21 +55,85 @@ const LoginModal: React.FC<LoginModalProps> = ({ onClose }) => {
   };
 
   return (
-    <div className="modal" ref={modalRef}>
-      <div className="modal-content">
-        <span className="close" onClick={onClose}>
-          &times;
-        </span>
-        <form onSubmit={handleLogin}>
-          <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="이메일 입력" />
+    <div
+      style={{
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        zIndex: 1000
+      }}
+      ref={modalRef}
+    >
+      <div
+        style={{
+          backgroundColor: '#FFDCE9',
+          padding: '20px',
+          borderRadius: '10px',
+          width: '75%',
+          maxWidth: '800px',
+          margin: '0 auto',
+          boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center'
+        }}
+      >
+        <h2 style={{ margin: '0 0 20px 0', fontWeight: 'bold', color: '#ff70a2', fontSize: '18pt' }}>로그인</h2>
+        <form onSubmit={handleLogin} style={{ width: '100%' }}>
+          <input
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="이메일 입력"
+            style={{ width: '95%', padding: '10px', margin: '10px 0', border: '1px solid #ddd', borderRadius: '4px' }}
+          />
           <input
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             placeholder="비밀번호 입력"
+            style={{ width: '95%', padding: '10px', margin: '10px 0', border: '1px solid #ddd', borderRadius: '4px' }}
           />
-          {loginError && <p>{loginError}</p>}
-          <button type="submit">로그인</button>
+          {loginError && <p style={{ color: 'red' }}>{loginError}</p>}
+          <button
+            type="submit"
+            style={{
+              width: '50%',
+              padding: '10px',
+              backgroundColor: '#e2f2ff',
+              color: 'black',
+              border: 'none',
+              borderRadius: '4px',
+              cursor: 'pointer',
+              fontWeight: 'bold',
+              fontSize: '13pt'
+            }}
+          >
+            로그인
+          </button>
+          <button
+            onClick={onClose}
+            style={{
+              width: '50%',
+              padding: '10px',
+              marginTop: '10px',
+              backgroundColor: '#fff7fa',
+              color: 'black',
+              border: 'none',
+              borderRadius: '4px',
+              cursor: 'pointer',
+              fontWeight: 'bold',
+              fontSize: '13pt'
+            }}
+          >
+            닫기
+          </button>
         </form>
       </div>
     </div>
