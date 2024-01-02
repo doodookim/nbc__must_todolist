@@ -14,9 +14,9 @@
 
 .modal-content {
   background-color: #fff;
-  padding: 20px;
+  padding: 30px;
   border-radius: 10px;
-  width: 300px;
+  width: 1800px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
@@ -39,7 +39,7 @@ input[type='password'] {
 button {
   width: 100%;
   padding: 10px;
-  background-color: #007bff;
+  background-color: #f18ab5;
   color: white;
   border: none;
   border-radius: 4px;
@@ -47,7 +47,7 @@ button {
 }
 
 button:hover {
-  background-color: #0056b3;
+  background-color: #ff9fd7;
 }
 
 p {
