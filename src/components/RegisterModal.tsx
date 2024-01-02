@@ -287,13 +287,13 @@ const StAddListModal = styled.div`
 `;
 
 const StAddModal = styled.div`
-  width: 550px;
+  width: 650px;
   height: 700px;
   max-height: 1000px;
   background-color: white;
   border-radius: 10px;
   padding: 20px;
-  overflow-y: auto;
+  overflow-y: scroll;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   margin: 0 auto;
 `;
@@ -478,23 +478,17 @@ const StFormContainer = styled.div`
 `;
 
 const StForm = styled.form`
-  background: #ffdce9;
-  width: 500px;
-  margin-top: 80px;
-
-  padding-left: 32px;
-  padding-top: 32px;
-  padding-right: 32px;
-  padding-bottom: 42px;
-  margin-bottom: 20px;
-  border-bottom-left-radius: 16px;
-  border-bottom-right-radius: 16px;
+  background: #fae7ef;
+  width: 100%;
+  margin: 80px auto;
+  padding: 16px;
+  border-radius: 16px;
   border-top: 1px solid #e9ecef;
 `;
 const StInput = styled.input`
   padding: 12px;
   border-radius: 4px;
-  border: 1px solid #dee2e6;
+  border: 1px solid #2a2929;
   width: 100%;
   outline: none;
   font-size: 18px;

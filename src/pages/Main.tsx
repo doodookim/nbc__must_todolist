@@ -1,6 +1,5 @@
 // import NoList from '../components/NoList';
 import NoList from '../components/NoList';
-import RegisterModal from '../components/RegisterModal';
 import Share from '../components/Share';
 // import DataPush from './DataPush';
 
@@ -22,7 +21,7 @@ const Main = () => {
   // });
   return (
     <>
-      <RegisterModal />
+      {/* <RegisterModal /> */}
       <NoList />
       <Share />
     </>
