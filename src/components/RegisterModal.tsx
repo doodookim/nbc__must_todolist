@@ -12,7 +12,22 @@ function RegisterModal({ onClose }: Modal) {
   const onToggleCreate = () => setOpen(!open);
   const onToggleFinish = () => setDone(!done);
 
-  const registerHandler = () => {};
+  // const registerHandler = async () => {
+  //   try {
+  //     const createdAt = serverTimestamp();
+  //     await mutation.mutateAsync({ contents, createdAt, isCompleted });
+  //     setContents('');
+  //     onclose(); // 데이터 등록 후 모달 닫기
+  //   } catch (error) {
+  //     console.error('데이터 전송 에러:', error);
+  //   }
+  // };
+  // const onEnterPress = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
+  //   if (event.key === 'Enter') {
+  //     event.preventDefault();
+  //     registerHandler(); // 작성완료 버튼과 동일한 동작 수행
+  //   }
+  // };
 
   return (
     <StAddListModal>
@@ -34,7 +49,7 @@ function RegisterModal({ onClose }: Modal) {
             <StFinishTodo onClick={onToggleFinish} done={done}>
               {done && <MdDone />}
             </StFinishTodo>
-            <StTodoText></StTodoText>
+            <StTodoText>할일 1</StTodoText>
             <StRemoveTodo done={done}>
               <MdDelete />
             </StRemoveTodo>
@@ -273,11 +288,11 @@ const StFormContainer = styled.form`
 const StForm = styled.form`
   background: #ffdce9;
   width: 500px;
-  margin-right: 10px;
+  margin-top: 100px;
   padding-left: 32px;
   padding-top: 32px;
   padding-right: 32px;
-  padding-bottom: 72px;
+  padding-bottom: 42px;
   border-bottom-left-radius: 16px;
   border-bottom-right-radius: 16px;
   border-top: 1px solid #e9ecef;
