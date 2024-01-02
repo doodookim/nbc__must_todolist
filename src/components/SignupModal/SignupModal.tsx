@@ -57,12 +57,20 @@ const SignUpModal: React.FC<SignUpModalProps> = ({ onClose }) => {
     } catch (error) {
       if (error instanceof Error) {
         console.error('회원가입 실패:', error.message);
-        setErrorMessage(error.message);
+
+        // Firebase 오류 코드 확인 및 사용자 정의 메시지 설정
+        if (error.message.includes('auth/weak-password')) {
+          setErrorMessage('비밀번호는 6자리 이상이어야 합니다!');
+        } else {
+          // 다른 오류에 대한 기본 메시지
+          setErrorMessage(error.message);
+        }
       }
     }
   };
 
   if (isSignUpSuccess) {
+    // 회원가입 성공 시의 화면 렌더링
     return (
       <div className="modal">
         <div className="modal-content">
@@ -98,7 +106,7 @@ const SignUpModal: React.FC<SignUpModalProps> = ({ onClose }) => {
     >
       <div
         style={{
-          backgroundColor: '#FFDCE9',
+          backgroundColor: 'white',
           padding: '20px',
           borderRadius: '10px',
           width: 'auto',
@@ -118,28 +126,56 @@ const SignUpModal: React.FC<SignUpModalProps> = ({ onClose }) => {
             value={username}
             onChange={(e) => setUsername(e.target.value)}
             placeholder="아이디 입력"
-            style={{ width: '95%', padding: '10px', margin: '10px 0', border: '1px solid #ddd', borderRadius: '4px' }}
+            style={{
+              width: '95%',
+              padding: '10px',
+              margin: '10px 0',
+              border: '1px solid #DD94B3',
+              borderRadius: '4px',
+              backgroundColor: 'white'
+            }}
           />
           <input
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             placeholder="이메일 입력"
-            style={{ width: '95%', padding: '10px', margin: '10px 0', border: '1px solid #ddd', borderRadius: '4px' }}
+            style={{
+              width: '95%',
+              padding: '10px',
+              margin: '10px 0',
+              border: '1px solid #DD94B3',
+              borderRadius: '4px',
+              backgroundColor: 'white'
+            }}
           />
           <input
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            placeholder="비밀번호 입력"
-            style={{ width: '95%', padding: '10px', margin: '10px 0', border: '1px solid #ddd', borderRadius: '4px' }}
+            placeholder="비밀번호는 6자리 이상입니다"
+            style={{
+              width: '95%',
+              padding: '10px',
+              margin: '10px 0',
+              border: '1px solid #DD94B3',
+              borderRadius: '4px',
+              backgroundColor: 'white'
+            }}
           />
           <input
             type="password"
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
             placeholder="비밀번호 재입력"
-            style={{ width: '95%', padding: '10px', margin: '10px 0', border: '1px solid #ddd', borderRadius: '4px' }}
+            style={{
+              width: '95%',
+              padding: '10px',
+              margin: '10px 0',
+              border: '1px solid #DD94B3',
+              borderRadius: '4px',
+              backgroundColor: 'white'
+            }}
           />
           {errorMessage && <p style={{ color: 'red', width: '75%' }}>{errorMessage}</p>}
           <button
@@ -147,8 +183,8 @@ const SignUpModal: React.FC<SignUpModalProps> = ({ onClose }) => {
             style={{
               width: '100%',
               padding: '10px',
-              backgroundColor: '#e2f2ff',
-              color: 'black',
+              backgroundColor: '#DD94B3',
+              color: 'white',
               border: 'none',
               borderRadius: '4px',
               cursor: 'pointer',
@@ -165,8 +201,8 @@ const SignUpModal: React.FC<SignUpModalProps> = ({ onClose }) => {
               width: '100%',
               padding: '10px',
               marginTop: '10px',
-              backgroundColor: '#fff7fa',
-              color: 'black',
+              backgroundColor: '#DD94B3',
+              color: 'white',
               border: 'none',
               borderRadius: '4px',
               cursor: 'pointer',

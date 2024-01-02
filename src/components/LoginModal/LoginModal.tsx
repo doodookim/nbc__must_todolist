@@ -72,7 +72,7 @@ const LoginModal: React.FC<LoginModalProps> = ({ onClose }) => {
     >
       <div
         style={{
-          backgroundColor: '#FFDCE9',
+          backgroundColor: 'white',
           padding: '20px',
           borderRadius: '10px',
           width: '75%',
@@ -91,40 +91,59 @@ const LoginModal: React.FC<LoginModalProps> = ({ onClose }) => {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             placeholder="이메일 입력"
-            style={{ width: '95%', padding: '10px', margin: '10px 0', border: '1px solid #ddd', borderRadius: '4px' }}
+            style={{
+              width: '95%',
+              padding: '10px',
+              margin: '10px 0',
+              border: '1px solid #DD94B3',
+              borderRadius: '4px',
+              backgroundColor: 'white'
+            }}
           />
           <input
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             placeholder="비밀번호 입력"
-            style={{ width: '95%', padding: '10px', margin: '10px 0', border: '1px solid #ddd', borderRadius: '4px' }}
+            style={{
+              width: '95%',
+              padding: '10px',
+              margin: '10px 0',
+              border: '1px solid #DD94B3',
+              borderRadius: '4px',
+              backgroundColor: 'white'
+            }}
           />
           {loginError && <p style={{ color: 'red' }}>{loginError}</p>}
           <button
             type="submit"
             style={{
-              width: '50%',
+              flex: 1,
+              marginRight: '140px',
+              width: '40%',
               padding: '10px',
-              backgroundColor: '#e2f2ff',
-              color: 'black',
+              backgroundColor: '#DD94B3',
+              color: 'white',
               border: 'none',
               borderRadius: '4px',
               cursor: 'pointer',
               fontWeight: 'bold',
-              fontSize: '13pt'
+              fontSize: '13pt',
+              marginBottom: '15px' // 첫 번째 버튼 아래 마진 추가
             }}
           >
             로그인
           </button>
           <button
             onClick={onClose}
+            className="close-button"
             style={{
-              width: '50%',
+              flex: 1,
+              width: '40%',
               padding: '10px',
-              marginTop: '10px',
-              backgroundColor: '#fff7fa',
-              color: 'black',
+              marginTop: '15px',
+              backgroundColor: '#DD94B3',
+              color: 'white',
               border: 'none',
               borderRadius: '4px',
               cursor: 'pointer',
