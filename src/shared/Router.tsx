@@ -1,5 +1,8 @@
 // Router.tsx
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import Alarm from '../components/Alarm';
+import Share from '../components/Share';
+import Layout from '../layout/Layout';
 import Main from '../pages/Main';
 
 interface RouterProps {
@@ -13,17 +16,11 @@ const Router: React.FC<RouterProps> = ({ showSignUp, setShowSignUp, showLogin, s
   return (
     <BrowserRouter>
       <Routes>
-        <Route
-          path="/"
-          element={
-            <Main
-              showSignUp={showSignUp}
-              setShowSignUp={setShowSignUp}
-              showLogin={showLogin}
-              setShowLogin={setShowLogin}
-            />
-          }
-        />
+        <Route element={<Layout />}>
+          <Route path="/" element={<Main />} />
+          <Route path="Share" element={<Share />} />
+          <Route path="Alarm" element={<Alarm />} />
+        </Route>
       </Routes>
     </BrowserRouter>
   );

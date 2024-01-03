@@ -16,13 +16,16 @@ const LoginModal: React.FC<LoginModalProps> = ({ onClose }) => {
   const navigate = useNavigate();
 
   useEffect(() => {
+    // 클릭 이벤트 핸들러: 모달 외부 클릭 시 모달 닫기
     const handleClickOutside = (event: MouseEvent) => {
       if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
         onClose();
       }
     };
 
+    // 이벤트 리스너 추가
     document.addEventListener('mousedown', handleClickOutside);
+    // 컴포넌트 언마운트 시 이벤트 리스너 제거
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
@@ -33,9 +36,13 @@ const LoginModal: React.FC<LoginModalProps> = ({ onClose }) => {
     const auth = getAuth();
 
     try {
+      // Firebase를 사용한 로그인 시도
       await signInWithEmailAndPassword(auth, email, password);
-      navigate('/dashboard');
+      // 로그인 성공 시 모달 닫고 메인 페이지로 이동
+      onClose();
+      navigate('/');
     } catch (error) {
+      // 로그인 실패 시 에러 메시지 설정
       if (error instanceof FirebaseError) {
         const errorCode = error.code;
         switch (errorCode) {
@@ -77,7 +84,7 @@ const LoginModal: React.FC<LoginModalProps> = ({ onClose }) => {
           borderRadius: '10px',
           width: '75%',
           maxWidth: '800px',
-          margin: '0 auto',
+          margin: '0',
           boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
           display: 'flex',
           flexDirection: 'column',
@@ -86,6 +93,7 @@ const LoginModal: React.FC<LoginModalProps> = ({ onClose }) => {
       >
         <h2 style={{ margin: '0 0 20px 0', fontWeight: 'bold', color: '#ff70a2', fontSize: '18pt' }}>로그인</h2>
         <form onSubmit={handleLogin} style={{ width: '100%' }}>
+          {/* 이메일 입력 필드 */}
           <input
             type="email"
             value={email}
@@ -100,6 +108,7 @@ const LoginModal: React.FC<LoginModalProps> = ({ onClose }) => {
               backgroundColor: 'white'
             }}
           />
+          {/* 비밀번호 입력 필드 */}
           <input
             type="password"
             value={password}
@@ -114,45 +123,43 @@ const LoginModal: React.FC<LoginModalProps> = ({ onClose }) => {
               backgroundColor: 'white'
             }}
           />
+          {/* 로그인 에러 메시지 표시 */}
           {loginError && <p style={{ color: 'red' }}>{loginError}</p>}
-          <button
-            type="submit"
-            style={{
-              flex: 1,
-              marginRight: '140px',
-              width: '40%',
-              padding: '10px',
-              backgroundColor: '#DD94B3',
-              color: 'white',
-              border: 'none',
-              borderRadius: '4px',
-              cursor: 'pointer',
-              fontWeight: 'bold',
-              fontSize: '13pt',
-              marginBottom: '15px' // 첫 번째 버튼 아래 마진 추가
-            }}
-          >
-            로그인
-          </button>
-          <button
-            onClick={onClose}
-            className="close-button"
-            style={{
-              flex: 1,
-              width: '40%',
-              padding: '10px',
-              marginTop: '15px',
-              backgroundColor: '#DD94B3',
-              color: 'white',
-              border: 'none',
-              borderRadius: '4px',
-              cursor: 'pointer',
-              fontWeight: 'bold',
-              fontSize: '13pt'
-            }}
-          >
-            닫기
-          </button>
+          {/* 로그인 및 닫기 버튼 */}
+          <div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
+            <button
+              type="submit"
+              style={{
+                padding: '10px',
+                backgroundColor: '#DD94B3',
+                color: 'white',
+                border: 'none',
+                borderRadius: '4px',
+                cursor: 'pointer',
+                fontWeight: 'bold',
+                fontSize: '13pt',
+                marginRight: '10px'
+              }}
+            >
+              로그인
+            </button>
+            <button
+              onClick={onClose}
+              className="close-button"
+              style={{
+                padding: '10px',
+                backgroundColor: '#DD94B3',
+                color: 'white',
+                border: 'none',
+                borderRadius: '4px',
+                cursor: 'pointer',
+                fontWeight: 'bold',
+                fontSize: '13pt'
+              }}
+            >
+              닫기
+            </button>
+          </div>
         </form>
       </div>
     </div>

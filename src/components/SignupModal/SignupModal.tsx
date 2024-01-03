@@ -13,19 +13,21 @@ const SignUpModal: React.FC<SignUpModalProps> = ({ onClose }) => {
   const [password, setPassword] = useState<string>('');
   const [confirmPassword, setConfirmPassword] = useState<string>('');
   const [errorMessage, setErrorMessage] = useState<string>('');
-  const [isSignUpSuccess, setIsSignUpSuccess] = useState<boolean>(false);
 
   const modalRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
 
   useEffect(() => {
+    // 클릭 이벤트 핸들러: 모달 외부 클릭 시 모달 닫기
     const handleClickOutside = (event: MouseEvent) => {
       if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
         onClose();
       }
     };
 
+    // 이벤트 리스너 추가
     document.addEventListener('mousedown', handleClickOutside);
+    // 컴포넌트 언마운트 시 이벤트 리스너 제거
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
@@ -48,16 +50,17 @@ const SignUpModal: React.FC<SignUpModalProps> = ({ onClose }) => {
       const user = userCredential.user;
 
       if (user) {
+        // 사용자 정보 Firestore에 저장
         const userRef = doc(firestore, 'users', user.uid);
         await setDoc(userRef, { username, email });
 
-        console.log('회원가입 성공:', user);
-        setIsSignUpSuccess(true);
+        // 회원가입 성공 시 모달 닫기 및 메인 페이지로 이동
+        onClose();
+        navigate('/');
       }
     } catch (error) {
       if (error instanceof Error) {
         console.error('회원가입 실패:', error.message);
-
         // Firebase 오류 코드 확인 및 사용자 정의 메시지 설정
         if (error.message.includes('auth/weak-password')) {
           setErrorMessage('비밀번호는 6자리 이상이어야 합니다!');
@@ -68,25 +71,6 @@ const SignUpModal: React.FC<SignUpModalProps> = ({ onClose }) => {
       }
     }
   };
-
-  if (isSignUpSuccess) {
-    // 회원가입 성공 시의 화면 렌더링
-    return (
-      <div className="modal">
-        <div className="modal-content">
-          <p>회원가입 성공!</p>
-          <button
-            onClick={() => {
-              onClose();
-              navigate('/');
-            }}
-          >
-            홈페이지로 이동
-          </button>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div
@@ -178,6 +162,7 @@ const SignUpModal: React.FC<SignUpModalProps> = ({ onClose }) => {
             }}
           />
           {errorMessage && <p style={{ color: 'red', width: '75%' }}>{errorMessage}</p>}
+
           <button
             type="submit"
             style={{

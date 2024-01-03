@@ -1,40 +1,163 @@
 .App {
-  text-align: center;
-}
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
+  position: relative;
+  width: 100%;
   min-height: 100vh;
+  color: #494748;
+}
+
+header {
+  position: relative;
+  width: 100%;
+  padding: 10px 40px;
+  display: flex;
+  justify-content: flex-end;
+  background-color: #ffdce9;
+}
+
+.container {
+  position: relative;
+  /* max-width: 800px; */
+  min-height: 100vh;
+  margin: 0 auto;
+  display: flex;
+  gap: 40px;
+  flex-direction: column;
+}
+
+.section {
+  width: 100%;
+}
+
+.todo-container {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
+  gap: 1rem;
+}
+
+.todo {
+  position: relative;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  padding: 20px 24px;
+  background: white;
+  box-shadow: 0 0 5px 3px rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+}
+
+.primary-btn {
+  background-color: #dd94b3;
   color: white;
+  display: inline-block;
+  padding: 10px 20px;
+  border-radius: 4px;
+  cursor: pointer;
 }
 
-.App-link {
-  color: #61dafb;
+.modal {
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100vh;
+  top: 0;
+  left: 0;
+  background: rgba(0, 0, 0, 0.521);
+  z-index: 10000;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.modal-inner {
+  size: 100px, 100px, 100px, 100px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 10px;
+  align-items: center;
+  background-color: white;
+  padding: 40px;
+  z-index: 10000;
+}
+
+.modal-inner input {
+  padding: 10px 20px;
+  outline: none;
+  border: 0.5px solid rgba(0, 0, 0, 0.3);
+  border-radius: 4px;
+}
+
+.progress {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+.progress .content {
+  text-wrap: nowrap;
+}
+.progress .status-bar {
+  width: 100%;
+  height: 2rem;
+  border: 1px solid #dd94b3;
+}
+
+.progress .bar {
+  background: #dd94b3;
+  height: 100%;
+}
+
+h1 {
+  font-weight: 600;
+  font-size: 1.4rem;
+  color: #dd94b3;
+}
+
+.checkbox {
+  display: flex;
+  align-items: center;
+  gap: 40px;
+}
+.check {
+  width: 16px;
+  height: 16px;
+  border: 0.5px solid rgba(0, 0, 0, 0.5);
+  border-radius: 4px;
+}
+
+.option {
+  position: absolute;
+  padding: 10px;
+  width: 100px;
+  z-index: 1000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  background: white;
+  border-radius: 4px;
+  box-shadow: 0 0 5px 3px rgba(0, 0, 0, 0.1);
+}
+
+.overline {
+  text-decoration: line-through;
+}
+
+.flex {
+  width: 100%;
+  display: flex;
+}
+
+.justify-between {
+  justify-content: space-between;
+}
+
+a {
+  text-decoration: none;
+  color: #494748;
+}
+
+.main {
+  padding: 40px;
 }
 .close-button:hover {
   background-color: #ffdce9;

@@ -1,24 +1,15 @@
-// Main.tsx
-import React from 'react';
-import LoginModal from '../components/LoginModal/LoginModal';
-import SignUpModal from '../components/SignupModal/SignupModal';
+import { QueryClient, QueryClientProvider } from 'react-query';
+import NoList from '../components/NoList';
+import Share from '../components/Share';
 
-interface MainProps {
-  showSignUp: boolean;
-  setShowSignUp: (show: boolean) => void;
-  showLogin: boolean;
-  setShowLogin: (show: boolean) => void;
-}
+const queryClient = new QueryClient();
 
-const Main: React.FC<MainProps> = ({ showSignUp, setShowSignUp, showLogin, setShowLogin }) => {
+const Main = () => {
   return (
-    <div>
-      <button onClick={() => setShowSignUp(true)}>회원가입</button>
-      <button onClick={() => setShowLogin(true)}>로그인</button>
-      {showSignUp && <SignUpModal onClose={() => setShowSignUp(false)} />}
-      {showLogin && <LoginModal onClose={() => setShowLogin(false)} />}
-      {/* Main 페이지의 다른 컨텐츠 */}
-    </div>
+    <QueryClientProvider client={queryClient}>
+      <NoList />
+      <Share />
+    </QueryClientProvider>
   );
 };
 
