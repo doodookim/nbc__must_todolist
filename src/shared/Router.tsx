@@ -1,5 +1,6 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import Alarm from '../components/Alarm';
+import RegisterModal from '../components/RegisterModal';
 import Share from '../components/Share';
 import Layout from '../layout/Layout';
 import Login from '../pages/Login';
@@ -14,6 +15,7 @@ const Router = () => {
           <Route path="Login" element={<Login />} />
           <Route path="Share" element={<Share />} />
           <Route path="Alarm" element={<Alarm />} />
+          <Route path="register" element={<RegisterModal onClose={() => {}} />} />
         </Route>
       </Routes>
     </BrowserRouter>
