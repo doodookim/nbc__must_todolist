@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import './App.css';
+// import './App.css';
 import Router from './shared/Router';
 import GlobalStyle from './styled/GlobalStyle';
 

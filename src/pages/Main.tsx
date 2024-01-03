@@ -1,11 +1,9 @@
-// import NoList from '../components/NoList';
 import { collection, getDocs, orderBy, query, where } from 'firebase/firestore';
 import { useQuery, useQueryClient } from 'react-query';
 import NoList from '../components/NoList';
 import RegisterModal from '../components/RegisterModal';
 import Share from '../components/Share';
 import { db } from '../firebase';
-// import DataPush from './DataPush';
 
 const Main = () => {
   const queryClient = useQueryClient();
@@ -26,14 +24,6 @@ const Main = () => {
   });
   return (
     <>
-      {filteredData.length > 0 ? (
-        <>
-          <RegisterModal onClose={() => {}} filteredData={filteredData} />
-          <Share />
-        </>
-      ) : (
-        <NoList />
-      )}
       {filteredData.length > 0 ? (
         <>
           <RegisterModal onClose={() => {}} filteredData={filteredData} />
