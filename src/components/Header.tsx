@@ -96,6 +96,7 @@ const StHeader = styled.header`
     color: #dd94b3;
     font-size: 40px;
     font-variation-settings: 'wght' 900;
+    font-family: inherit;
     border: none;
     user-select: none;
     margin-left: 14px;
