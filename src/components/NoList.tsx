@@ -1,13 +1,11 @@
-import { useState } from 'react';
 import styled from 'styled-components';
 
+import { useNavigate } from 'react-router-dom';
 import Button from './Button';
-import RegisterModal from './RegisterModal';
 function NoList() {
-  const [modal, setModal] = useState(false);
-
+  const navigate = useNavigate();
   const onClickEvent = () => {
-    setModal(true);
+    navigate('/register');
   };
 
   return (
@@ -21,13 +19,6 @@ function NoList() {
         </h1>
         <Button text="등록" onClick={onClickEvent} />
       </StNolist>
-      {modal && (
-        <RegisterModal
-          onClose={() => {
-            setModal(false);
-          }}
-        />
-      )}
     </>
   );
 }

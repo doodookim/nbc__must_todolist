@@ -20,11 +20,15 @@ import closebutton from '../assets/closebutton.png';
 import edit from '../assets/edit.png';
 import ok from '../assets/ok.png';
 import { db } from '../firebase';
-import { Modal } from '../types/global';
 import ProgressBar from './ProgressBar';
-
 interface Props {
-  filteredData: string[];
+  onClose: () => void;
+  filteredData?: {
+    id: string;
+    contents: any;
+    isCompleted: any;
+    createdAt: any;
+  }[];
 }
 
 interface NewContent {
@@ -32,7 +36,7 @@ interface NewContent {
   createdAt: any;
   isCompleted: boolean;
 }
-function RegisterModal({ onClose }: Modal, { filteredData }: Props) {
+function RegisterModal({ onClose, filteredData }: Props) {
   const queryClient = useQueryClient();
   const newDate = new Date();
   const today = `${newDate.getFullYear()}-${newDate.getMonth() + 1}-${newDate.getDate()}`;
@@ -474,7 +478,7 @@ const StCreateButton = styled.button<{ open: boolean }>`
 const StFormContainer = styled.div`
   width: 100%;
   display: flex;
-  /* position: absolute; */
+  position: absolute;
 `;
 
 const StForm = styled.form`
