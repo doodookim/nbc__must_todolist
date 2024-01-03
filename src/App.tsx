@@ -11,3 +11,4 @@ function App(): JSX.Element {
     <Router showSignUp={showSignUp} setShowSignUp={setShowSignUp} showLogin={showLogin} setShowLogin={setShowLogin} />
   );
 }
+export default App;
