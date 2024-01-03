@@ -11,7 +11,7 @@ const Main = () => {
   const queryClient = useQueryClient();
   const newDate = new Date();
   const today = `${newDate.getFullYear()}-${newDate.getMonth() + 1}-${newDate.getDate()}`;
-  const { data: filteredData } = useQuery(['contents', { date: today }], async () => {
+  const { data: filteredData = [] } = useQuery(['contents', { date: today }], async () => {
     const contentsRef = collection(db, 'contents');
     const midnight = new Date(today);
     const queryContents = query(contentsRef, where('createdAt', '>=', midnight), orderBy('createdAt', 'asc'));
@@ -26,7 +26,7 @@ const Main = () => {
   });
   return (
     <>
-      {filteredData && filteredData.length > 0 ? (
+      {filteredData.length > 0 ? (
         <>
           <RegisterModal onClose={() => {}} filteredData={filteredData} />
           <Share />

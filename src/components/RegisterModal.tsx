@@ -15,6 +15,7 @@ import {
 import { useState } from 'react';
 import { MdAdd, MdDelete, MdDone } from 'react-icons/md';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import closebutton from '../assets/closebutton.png';
 import edit from '../assets/edit.png';
@@ -38,6 +39,7 @@ interface NewContent {
 }
 function RegisterModal({ onClose, filteredData }: Props) {
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
   const newDate = new Date();
   const today = `${newDate.getFullYear()}-${newDate.getMonth() + 1}-${newDate.getDate()}`;
   const weekdays = ['일', '월', '화', '수', '목', '금', '토'];
@@ -49,6 +51,9 @@ function RegisterModal({ onClose, filteredData }: Props) {
   const [editItemId, setEditItemId] = useState<string | null>(null); // 현재 편집 중인 항목 상태
   const [editContents, setEditContents] = useState(''); // 내용 수정 상태
   const onToggleCreate = () => setOpen(!open);
+  const onClicktoNolist = () => {
+    navigate('/');
+  };
   const { data: fetchedData } = useQuery(['contents', { date: today }], async () => {
     const contentsRef = collection(db, 'contents');
     const midnight = new Date(today);
@@ -154,7 +159,7 @@ function RegisterModal({ onClose, filteredData }: Props) {
         <StModalHead>
           <div className="top-list">
             <span>오늘의 할 일</span>
-            <img className="close" src={closebutton} alt="closebutton" onClick={onClose} />
+            <img className="close" src={closebutton} alt="closebutton" onClick={onClicktoNolist} />
           </div>
           <div className="middle-list">
             <h1>
@@ -478,11 +483,12 @@ const StCreateButton = styled.button<{ open: boolean }>`
 const StFormContainer = styled.div`
   width: 100%;
   display: flex;
-  position: absolute;
+  /* position: absolute; */
 `;
 
 const StForm = styled.form`
   background: #fae7ef;
+  /* position: fixed; */
   width: 100%;
   margin: 80px auto;
   padding: 16px;
