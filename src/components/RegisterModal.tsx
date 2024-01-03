@@ -336,7 +336,7 @@ const StAddListModal = styled.div`
 `;
 
 const StAddModal = styled.div`
-  width: 650px;
+  width: 700px;
   height: 700px;
   max-height: 1000px;
   background-color: white;
@@ -529,7 +529,7 @@ const StFormContainer = styled.div`
 const StForm = styled.form`
   background: #fae7ef;
   /* position: fixed; */
-  width: 100%;
+  width: 500px;
   margin: 80px auto;
   padding: 16px;
   border-radius: 16px;

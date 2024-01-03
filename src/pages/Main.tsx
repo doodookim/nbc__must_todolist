@@ -24,7 +24,7 @@ const Main = () => {
   });
   return (
     <>
-      {filteredData.length > 0 ? (
+      {filteredData && filteredData.length > 0 ? (
         <>
           <RegisterModal onClose={() => {}} filteredData={filteredData} />
           <Share />

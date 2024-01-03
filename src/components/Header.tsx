@@ -90,16 +90,19 @@ const StHeader = styled.header`
   div {
     display: flex;
     align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+    margin-right: 100px;
     cursor: pointer;
   }
   span {
     color: #dd94b3;
-    font-size: 40px;
-    font-variation-settings: 'wght' 900;
-    font-family: inherit;
+    font-size: 50px;
+    font-variation-settings: 'wght' 800;
     border: none;
     user-select: none;
     margin-left: 14px;
+    text-align: center;
   }
   img {
     height: 70px;
