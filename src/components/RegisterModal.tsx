@@ -21,6 +21,7 @@ import closebutton from '../assets/closebutton.png';
 import edit from '../assets/edit.png';
 import ok from '../assets/ok.png';
 import { db } from '../firebase';
+import { webPushAlarm } from './Alarm';
 import ProgressBar from './ProgressBar';
 
 declare global {
@@ -220,7 +221,13 @@ function RegisterModal({ onClose, filteredData }: Props) {
           <div key={item.id}>
             <StModalContent>
               <StTodoItem>
-                <StFinishTodo onClick={() => onToggleFinish(item.id)} done={item.isCompleted}>
+                <StFinishTodo
+                  onClick={() => {
+                    onToggleFinish(item.id);
+                    webPushAlarm(item.id, 'COMPLETE', item.contents);
+                  }}
+                  done={item.isCompleted}
+                >
                   <MdDone />
                 </StFinishTodo>
                 {editItemId === item.id ? (
@@ -233,6 +240,7 @@ function RegisterModal({ onClose, filteredData }: Props) {
                       onClick={(event) => {
                         event.preventDefault();
                         updateItemHandler(event, item.id);
+                        webPushAlarm(item.id, 'UPDATE', item.contents);
                       }}
                     />
                   </StEditForm>
@@ -250,7 +258,12 @@ function RegisterModal({ onClose, filteredData }: Props) {
                   </>
                 )}
                 <StRemoveTodo done={done}>
-                  <MdDelete onClick={() => deleteItem(item.id)} />
+                  <MdDelete
+                    onClick={() => {
+                      deleteItem(item.id);
+                      webPushAlarm(item.id, 'DELETE', item.contents);
+                    }}
+                  />
                 </StRemoveTodo>
               </StTodoItem>
             </StModalContent>
