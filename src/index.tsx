@@ -1,18 +1,23 @@
 import ReactDOM from 'react-dom/client';
+import { QueryClient, QueryClientProvider } from 'react-query';
+import { ReactQueryDevtools } from 'react-query/devtools';
+import { Provider } from 'react-redux';
 import App from './App';
+import app from './firebase';
 import './index.css';
+import { store } from './redux/store/store';
 import reportWebVitals from './reportWebVitals';
 
-import { Provider } from 'react-redux';
-import app from './firebase';
-import { store } from './redux/store/store';
-
 console.log('app', app);
+const queryClient = new QueryClient();
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
 root.render(
   <Provider store={store}>
-    <App />
+    <QueryClientProvider client={queryClient}>
+      <App />
+      <ReactQueryDevtools initialIsOpen={false} />
+    </QueryClientProvider>
   </Provider>
 );
 

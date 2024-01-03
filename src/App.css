@@ -151,16 +151,6 @@ h1 {
   justify-content: space-between;
 }
 
-.nolist {
-  width: 100%;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  gap: 40px;
-  align-items: center;
-  justify-content: center;
-}
-
 a {
   text-decoration: none;
   color: #494748;
