@@ -1,13 +1,11 @@
-import styled from 'styled-components';
-
 import { useNavigate } from 'react-router-dom';
+import styled from 'styled-components';
 import Button from './Button';
 function NoList() {
   const navigate = useNavigate();
   const onClickEvent = () => {
     navigate('/register');
   };
-
   return (
     <>
       <StNolist>
@@ -22,9 +20,7 @@ function NoList() {
     </>
   );
 }
-
 export default NoList;
-
 const StNolist = styled.div`
   width: 100%;
   min-height: 100vh;

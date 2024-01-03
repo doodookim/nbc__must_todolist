@@ -34,8 +34,15 @@ const Main = () => {
       ) : (
         <NoList />
       )}
+      {filteredData.length > 0 ? (
+        <>
+          <RegisterModal onClose={() => {}} filteredData={filteredData} />
+          <Share />
+        </>
+      ) : (
+        <NoList />
+      )}
     </>
   );
 };
-
 export default Main;

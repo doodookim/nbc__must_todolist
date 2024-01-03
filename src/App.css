@@ -159,3 +159,7 @@ a {
 .main {
   padding: 40px;
 }
+.close-button:hover {
+  background-color: #ffdce9;
+  color: #dd94b3;
+}
