@@ -12,7 +12,7 @@ import {
   updateDoc,
   where
 } from 'firebase/firestore';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { MdAdd, MdDelete, MdDone } from 'react-icons/md';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { useNavigate } from 'react-router-dom';
@@ -22,6 +22,13 @@ import edit from '../assets/edit.png';
 import ok from '../assets/ok.png';
 import { db } from '../firebase';
 import ProgressBar from './ProgressBar';
+
+declare global {
+  interface Window {
+    Kakao: any;
+  }
+}
+
 interface Props {
   onClose: () => void;
   filteredData?: {
@@ -37,7 +44,38 @@ interface NewContent {
   createdAt: any;
   isCompleted: boolean;
 }
+
+const Kakao = window.Kakao;
+
 function RegisterModal({ onClose, filteredData }: Props) {
+  useEffect(() => {
+    Kakao.cleanup();
+    Kakao.init('e58f0398cda8e3595e39dfe5889efad2');
+  }, []);
+
+  const SHARE_URL: string = 'http://localhost:3000';
+  const handleShareKakaoButton = () => {
+    Kakao.Share.sendDefault({
+      objectType: 'feed',
+      content: {
+        title: `제목`,
+        description: `내용`,
+        imageUrl: '이미지 URL',
+        link: {
+          webUrl: SHARE_URL
+        }
+      },
+      buttons: [
+        {
+          title: '웹으로 이동',
+          link: {
+            webUrl: SHARE_URL
+          }
+        }
+      ]
+    });
+  };
+
   const queryClient = useQueryClient();
   const navigate = useNavigate();
   const newDate = new Date();
@@ -153,10 +191,12 @@ function RegisterModal({ onClose, filteredData }: Props) {
     return completionPercentage !== null ? +completionPercentage.toFixed(2) : null;
   };
   const remainingTasksCount = fetchedData?.filter((task) => !task.isCompleted).length || 0;
+
   return (
     <StAddListModal>
       <StAddModal>
         <StModalHead>
+          <button onClick={handleShareKakaoButton}>카카오톡으로 공유하기</button>
           <div className="top-list">
             <span>오늘의 할 일</span>
             <img className="close" src={closebutton} alt="closebutton" onClick={onClicktoNolist} />
