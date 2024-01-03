@@ -4,7 +4,6 @@ import { ReactQueryDevtools } from 'react-query/devtools';
 import { Provider } from 'react-redux';
 import App from './App';
 import app from './firebase';
-import './index.css';
 import { store } from './redux/store/store';
 import reportWebVitals from './reportWebVitals';
 

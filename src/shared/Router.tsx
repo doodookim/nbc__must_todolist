@@ -1,4 +1,3 @@
-// Router.tsx
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import Alarm from '../components/Alarm';
 import RegisterModal from '../components/RegisterModal';

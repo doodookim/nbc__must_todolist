@@ -4,6 +4,7 @@ import NoList from '../components/NoList';
 import RegisterModal from '../components/RegisterModal';
 import Share from '../components/Share';
 import { db } from '../firebase';
+
 const Main = () => {
   const queryClient = useQueryClient();
   const newDate = new Date();
@@ -23,7 +24,7 @@ const Main = () => {
   });
   return (
     <>
-      {filteredData.length > 0 ? (
+      {filteredData && filteredData.length > 0 ? (
         <>
           <RegisterModal onClose={() => {}} filteredData={filteredData} />
           <Share />

@@ -90,16 +90,19 @@ const StHeader = styled.header`
   div {
     display: flex;
     align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+    margin-right: 100px;
     cursor: pointer;
   }
   span {
     color: #dd94b3;
-    font-size: 40px;
-    font-variation-settings: 'wght' 900;
-    font-family: inherit;
+    font-size: 50px;
+    font-variation-settings: 'wght' 800;
     border: none;
     user-select: none;
     margin-left: 14px;
+    text-align: center;
   }
   img {
     height: 70px;
@@ -115,16 +118,16 @@ const ButtonContainer = styled.div`
 `;
 
 const StyledButton = styled.button`
-  padding: 10px 15px;, 
-  font-size: 16px; ,
-  background-color: #ffdce9; 
-  color: #dd94b3; 
-  border: 1px solid #dd94b3; 
+  padding: 10px 15px;
+  font-size: 16px;
+  background-color: #ffdce9;
+  color: #dd94b3;
+  border: 1px solid #dd94b3;
   border-radius: 4px;
   cursor: pointer;
 
   &:hover {
-    background-color: #dd94b3; 
+    background-color: #dd94b3;
     color: white;
   }
 `;
